@@ -830,7 +830,8 @@
       #hero {
         padding-top: 64px;
         height: 100svh;
-        background-size: auto 100%;
+        background-image: url('images/backgorund-images/man-playing-mobile.png');
+        background-size: cover;
         background-position: center center;
       }
 
@@ -1133,19 +1134,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
     gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.normalizeScroll(true);
 
     const video = document.getElementById('piano-video');
     const overlay = document.getElementById('piano-overlay');
     const progressFill = document.getElementById('progress-fill');
 
     function initPianoScrollTrigger() {
-      if (window.innerWidth <= 768) {
-        video.loop = true;
-        video.play().catch(() => {});
-        gsap.to(overlay, { opacity: 0, duration: 1, delay: 0.4, ease: 'power2.out' });
-        return;
-      }
-
       ScrollTrigger.create({
         trigger: '#piano-reveal',
         start: 'top top',
