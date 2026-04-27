@@ -846,8 +846,7 @@
         top: 0;
         bottom: 0;
         height: 100%;
-        object-fit: contain;
-        transform: scale(1.25);
+        object-fit: cover;
       }
 
       .reveal-label { left: 24px; bottom: 40px; }
@@ -1153,7 +1152,7 @@
             }
             last = ts;
             if (video.currentTime <= 0) {
-              setTimeout(() => video.play().catch(() => {}), 2500);
+              setTimeout(() => video.play().catch(() => {}), 1500);
               return;
             }
             rafId = requestAnimationFrame(step);
@@ -1163,10 +1162,18 @@
 
         video.addEventListener('ended', () => {
           video.pause();
-          setTimeout(reverseVideo, 2500);
+          setTimeout(reverseVideo, 1500);
         });
 
-        video.play().catch(() => {});
+        const pianoSection = document.getElementById('piano-reveal');
+        const pianoObserver = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            gsap.to(overlay, { opacity: 0, duration: 1, ease: 'power2.out' });
+            video.play().catch(() => {});
+            pianoObserver.disconnect();
+          }
+        }, { threshold: 0.25 });
+        pianoObserver.observe(pianoSection);
         return;
       }
 
