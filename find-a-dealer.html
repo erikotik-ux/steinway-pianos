@@ -26,10 +26,9 @@
       position: relative;
       display: flex;
       align-items: flex-end;
-      padding: 0 56px 64px;
     }
     .page-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 60%, transparent 100%); }
-    .hero-content { position: relative; z-index: 1; color: #fff; }
+    .hero-content { position: relative; z-index: 1; color: #fff; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 56px 64px; box-sizing: border-box; }
     .hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: 14px; }
     .hero-title { font-family: 'Libre Baskerville', serif; font-size: clamp(36px, 6vw, 72px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; }
 
@@ -52,7 +51,7 @@
     .contact-item { font-size: 13px; color: var(--muted); }
     .contact-item strong { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); margin-bottom: 3px; }
 
-    .regions { max-width: 1200px; margin: 0 auto; padding: 0 56px 100px; border-top: 1px solid var(--gray-mid); }
+    .regions { max-width: 1100px; margin: 0 auto; padding: 0 56px 100px; border-top: 1px solid var(--gray-mid); }
     .regions-title { font-family: 'Libre Baskerville', serif; font-size: clamp(24px, 3vw, 36px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 48px; padding-top: 64px; }
     .regions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
     .region-card { background: var(--bg); padding: 40px 32px; }
@@ -81,11 +80,12 @@
     @media (max-width: 900px) {
       .page-body { grid-template-columns: 1fr; gap: 48px; padding: 80px 32px; }
       .regions-grid { grid-template-columns: 1fr 1fr; }
-      .page-hero { padding: 0 32px 48px; }
+      .hero-content { padding: 0 32px 48px; }
     }
     @media (max-width: 600px) {
       nav { padding: 0 20px; }
-      .page-hero { padding: 0 20px 40px; height: 50vh; background-position: 80% 30%; }
+      .page-hero { height: 50vh; background-position: 80% 30%; }
+      .hero-content { padding: 0 20px 40px; }
       .page-body { padding: 60px 20px; }
       .regions { padding: 0 20px 60px; }
       .regions-grid { grid-template-columns: 1fr; }
