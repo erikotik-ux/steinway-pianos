@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steinway &amp; Sons</title>
+  <meta name="description" content="Steinway &amp; Sons — handcrafted grand pianos built to the highest standard since 1853. Explore our six concert and salon grand models.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --red: #B60000;
+      --secondary: #959EA9;
+      --bg: #FFFFFF;
+      --text: #000000;
+      --muted: #60666F;
+      --gray-light: #F5F4F2;
+      --gray-mid: #DEDEDE;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ──────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1002;
+      height: 80px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 56px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--gray-mid);
+    }
+
+    .nav-left {
+      display: flex;
+      gap: 48px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-center {
+      display: flex;
+      justify-content: center;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 48px;
+      list-style: none;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .nav-logo img {
+      height: 44px;
+      display: block;
+    }
+
+    .nav-left a,
+    .nav-right a {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-left a:hover,
+    .nav-right a:hover {
+      color: var(--red);
+    }
+
+    .nav-cta {
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--red);
+      border: none;
+      padding: 13px 28px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: #8a0000;
+    }
+
+    /* ── HERO (static — no video) ─────────────────────── */
+    #hero {
+      height: 100vh;
+      padding-top: 80px;
+      background: url('images/backgorund-images/man-playing.png') center / cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Dark overlay + subtle red glow over the hero image */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+        radial-gradient(ellipse 80% 60% at 50% 60%, rgba(182, 0, 0, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-est {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 28px;
+    }
+
+    .hero-title,
+    .section-title,
+    .reveal-headline,
+    .model-name {
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .hero-title {
+      font-size: clamp(56px, 9vw, 120px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 0.92;
+      margin-bottom: 28px;
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: 64px;
+    }
+
+    .hero-scroll {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-scroll span {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.7);
+      animation: scrollDrop 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollDrop {
+      0% {
+        top: -100%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    /* ── PIANO REVEAL (scroll-scrubbed video) ─────────── */
+    #piano-reveal {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: #f6f5f3;
+      overflow: hidden;
+      /* Push content below the fixed nav */
+      padding-top: 72px;
+      box-sizing: border-box;
+    }
+
+    #piano-video {
+      position: absolute;
+      top: 102px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: calc(100% - 132px);
+      object-fit: contain;
+      will-change: transform;
+    }
+
+    /* Overlay color matches section bg so fade-in looks seamless */
+    #piano-overlay {
+      position: absolute;
+      inset: 0;
+      background: #f6f5f3;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+
+    /* Label in bottom-left corner */
+    .reveal-label {
+      position: absolute;
+      bottom: 52px;
+      left: 56px;
+      z-index: 2;
+    }
+
+    .reveal-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+
+    .reveal-headline {
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    /* Thin progress bar at the very bottom */
+    .reveal-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.08);
+      z-index: 3;
+    }
+
+    .reveal-progress-fill {
+      height: 100%;
+      width: 100%;
+      background: #dedede;
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+
+    /* ── SHARED SECTION ───────────────────────────────── */
+    .section-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: clamp(36px, 4.5vw, 60px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .section-body {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 520px;
+    }
+
+    /* ── MODELS ───────────────────────────────────────── */
+    #models {
+      padding: 120px 56px;
+      background: var(--bg);
+    }
+
+    .models-header {
+      margin-bottom: 64px;
+    }
+
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+    }
+
+    .model-card {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      background: #0c0c0c;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .model-card-inner {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-color: #111;
+      transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .model-card:hover .model-card-inner {
+      transform: scale(1.05);
+    }
+
+    .model-card-inner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.15) 55%, rgba(0, 0, 0, 0.75) 82%, rgba(0, 0, 0, 1) 100%);
+    }
+
+    .model-card-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--red);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .model-card:hover .model-card-bar {
+      transform: scaleY(1);
+    }
+
+    .model-card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 36px 32px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0) 100%);
+    }
+
+    .model-size {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .model-name {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .model-tagline {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: 28px;
+    }
+
+    .model-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .model-link::after {
+      content: '→';
+      font-size: 14px;
+      transition: transform 0.2s;
+    }
+
+    .model-card:hover .model-link {
+      color: var(--red);
+    }
+
+    .model-card:hover .model-link::after {
+      transform: translateX(4px);
+    }
+
+    /* ── FEATURES ─────────────────────────────────────── */
+    #features {
+      padding: 120px 56px;
+      background: linear-gradient(rgba(245, 244, 242, 0.82), rgba(245, 244, 242, 0.82)), url('images/backgorund-images/crafting.png') center / cover no-repeat;
+      border-top: 1px solid var(--gray-mid);
+      border-bottom: 1px solid var(--gray-mid);
+    }
+
+    .features-header {
+      margin-bottom: 80px;
+    }
+
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 56px;
+    }
+
+    .feature-item {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .feature-number {
+      font-size: 80px;
+      font-weight: 800;
+      color: var(--gray-mid);
+      line-height: 1;
+      margin-bottom: 28px;
+      letter-spacing: -0.04em;
+    }
+
+    .feature-name {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 14px;
+    }
+
+    .feature-rule {
+      width: 28px;
+      height: 2px;
+      background: var(--red);
+      margin-bottom: 16px;
+    }
+
+    .feature-text {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.9;
+      text-wrap: pretty;
+    }
+
+    /* ── CONTACT + FOOTER WRAP ────────────────────────── */
+    .contact-footer-wrap {
+      background: url('images/backgorund-images/stage.png') center / cover no-repeat;
+    }
+
+    /* ── CONTACT ──────────────────────────────────────── */
+    #contact {
+      padding: 160px 56px;
+      background: linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.72));
+      text-align: center;
+    }
+
+    #contact .section-eyebrow {
+      color: var(--red);
+    }
+
+    #contact .section-title {
+      color: #fff;
+      max-width: 600px;
+      margin: 0 auto 20px;
+    }
+
+    #contact .section-body {
+      color: rgba(255, 255, 255, 0.45);
+      margin: 0 auto 52px;
+      text-align: center;
+    }
+
+    .contact-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--red);
+      border: none;
+      padding: 16px 40px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #8a0000;
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #fff;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 16px 40px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* ── FOOTER ───────────────────────────────────────── */
+    footer {
+      background: rgba(0, 0, 0, 0.88);
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 36px 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-logo img {
+      height: 26px;
+      display: block;
+      filter: brightness(0) invert(1);
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.25);
+      letter-spacing: 0.04em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.25);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    /* ── Hamburger ─────────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 1001;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--text);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ── Mobile nav overlay ─────────────────────────────── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 9, 8, 0.97);
+      z-index: 1001;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav a,
+    .mobile-nav button {
+      font-family: 'Manrope', sans-serif;
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: #fff;
+      text-decoration: none;
+      text-transform: uppercase;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.2s;
+    }
+
+    .mobile-nav a:hover,
+    .mobile-nav button:hover { color: var(--red); }
+
+    .mobile-nav .mobile-nav-cta {
+      margin-top: 8px;
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 14px 36px;
+    }
+
+    /* ── Modal ─────────────────────────────────────────── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: #faf9f7;
+      width: 100%;
+      max-width: 560px;
+      padding: 56px 48px 48px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 28px;
+      color: #888;
+      line-height: 1;
+      padding: 4px;
+      transition: color 0.2s;
+    }
+
+    .modal-close:hover { color: #111; }
+
+    .modal-eyebrow {
+      font-family: 'Manrope', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: #111;
+      margin-bottom: 32px;
+    }
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-form input,
+    .modal-form textarea {
+      width: 100%;
+      padding: 14px 16px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 0;
+      font-family: 'Manrope', sans-serif;
+      font-size: 14px;
+      color: #111;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+
+    .modal-form input:focus,
+    .modal-form textarea:focus { border-color: #999; }
+
+    .modal-form textarea { resize: vertical; min-height: 100px; }
+
+    .modal-form input::placeholder,
+    .modal-form textarea::placeholder { color: #aaa; }
+
+    .modal-submit {
+      margin-top: 8px;
+      background: #111;
+      color: #fff;
+      font-family: 'Manrope', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: none;
+      padding: 18px 36px;
+      cursor: pointer;
+      transition: background 0.2s;
+      align-self: flex-start;
+    }
+
+    .modal-submit:hover { background: var(--red); }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .models-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+    }
+
+    @media (max-width: 768px) {
+      /* Nav */
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 24px;
+        height: 64px;
+      }
+
+      .nav-left,
+      .nav-right { display: none; }
+
+      .nav-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .hamburger { display: flex; }
+
+      /* Hero */
+      #hero { padding-top: 64px; }
+
+      .hero-title { font-size: clamp(48px, 14vw, 80px); }
+      .hero-sub { font-size: 13px; }
+      .hero-est { font-size: 10px; }
+
+      /* Piano reveal — full height, piano fits width without cropping */
+      #piano-reveal { padding-top: 0; margin-top: -10px; }
+
+      #piano-video {
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        object-fit: contain;
+        transform: scale(1.25);
+      }
+
+      .reveal-label { left: 24px; bottom: 40px; }
+      .reveal-headline { font-size: clamp(24px, 6vw, 40px); }
+
+      /* Models */
+      #models { padding: 80px 24px; }
+      .models-header { margin-bottom: 48px; }
+      .section-title { font-size: clamp(28px, 8vw, 56px); }
+      .models-grid { grid-template-columns: 1fr; gap: 16px; max-width: 480px; margin: 0 auto; }
+
+      /* Features */
+      #features { padding: 80px 24px; }
+      .features-grid { grid-template-columns: 1fr; gap: 48px; }
+      .feature-item { opacity: 1; transform: none; }
+
+      /* Contact */
+      #contact { padding: 100px 24px; }
+      .contact-actions { flex-direction: column; align-items: center; gap: 16px; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 320px; text-align: center; }
+
+      /* Footer */
+      footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 40px 24px;
+        gap: 24px;
+      }
+
+      .footer-links { gap: 20px; flex-wrap: wrap; justify-content: center; }
+
+      /* Modal */
+      .modal { padding: 48px 24px 36px; }
+      .modal-title { font-size: 22px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 42px; }
+      .models-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <ul class="nav-left">
+      <li><a href="#models">Pianos</a></li>
+      <li><a href="#features">Craftsmanship</a></li>
+    </ul>
+    <div class="nav-center">
+      <a class="nav-logo" href="#">
+        <img src="S&S_logo/steinway-and-sons.svg" alt="Steinway &amp; Sons">
+      </a>
+    </div>
+    <ul class="nav-right">
+      <li><a href="https://www.steinway.com/dealers" target="_blank" rel="noreferrer">Find a Dealer</a></li>
+      <li><button class="nav-cta" id="nav-cta-btn">Request Information</button></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#models" class="mobile-nav-link">Pianos</a>
+    <a href="#features" class="mobile-nav-link">Craftsmanship</a>
+    <a href="https://www.steinway.com/dealers" target="_blank" rel="noreferrer" class="mobile-nav-link">Find a Dealer</a>
+    <button class="mobile-nav-cta" id="mobile-modal-btn">Request Information</button>
+  </div>
+
+  <!-- HERO — static branding, no video -->
+  <section id="hero">
+    <div class="hero-inner">
+      <span class="hero-est">Est. 1853 · New York</span>
+      <h1 class="hero-title">Steinway<br>&amp; Sons</h1>
+      <p class="hero-sub">The Instrument of the Immortals</p>
+      <div class="hero-scroll">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIANO REVEAL — scroll-scrubbed video, separate pinned section -->
+  <section id="piano-reveal">
+    <video id="piano-video" muted playsinline preload="auto">
+      <source src="video/disassembly_scrub.mp4" type="video/mp4">
+    </video>
+
+    <div class="reveal-label">
+      <p class="reveal-eyebrow">Anatomy of an Icon</p>
+      <h2 class="reveal-headline">12,000 parts.<br>One instrument.</h2>
+    </div>
+    <div class="reveal-progress">
+      <div class="reveal-progress-fill" id="progress-fill"></div>
+    </div>
+    <!-- Hides video while hero is still on screen; fades out on pin -->
+    <div id="piano-overlay"></div>
+  </section>
+
+  <!-- MODELS -->
+  <section id="models">
+    <div class="models-header">
+      <p class="section-eyebrow">Grand Pianos</p>
+      <h2 class="section-title">Six Models.<br>One Standard.</h2>
+      <p class="section-body">From intimate salons to the world's greatest concert halls, every Steinway grand is built
+        to the same exacting standard — no compromises, at any size.</p>
+    </div>
+    <div class="models-grid">
+
+      <div class="model-card">
+        <div class="model-card-inner"
+          style="background-image: url('images/models/model-d-high-res.png'); background-size: auto 104%; background-position: 52% 300%;">
+        </div>
+        <div class="model-card-bar"></div>
+        <div class="model-card-content">
+          <div class="model-size">8′ 11¾″</div>
+          <div class="model-name">Model D</div>
+          <div class="model-tagline">Concert Grand</div>
+          <a href="https://www.steinway.com/pianos/steinway/grand/model-d" target="_blank" rel="noreferrer"
+            class="model-link">Explore</a>
+        </div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-card-inner"
+          style="background-image: url('images/models/model-b-high-res.png'); background-size: auto 106%; background-position: 55% 200%;">
+        </div>
+        <div class="model-card-bar"></div>
+        <div class="model-card-content">
+          <div class="model-size">6′ 11″</div>
+          <div class="model-name">Model B</div>
+          <div class="model-tagline">Classic Grand</div>
+          <a href="https://www.steinway.com/pianos/steinway/grand/model-b" target="_blank" rel="noreferrer"
+            class="model-link">Explore</a>
+        </div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-card-inner"
+          style="background-image: url('images/models/model-a-high-res.png'); background-size: auto 114%; background-position: 46% 112%;">
+        </div>
+        <div class="model-card-bar"></div>
+        <div class="model-card-content">
+          <div class="model-size">6′ 2″</div>
+          <div class="model-name">Model A</div>
+          <div class="model-tagline">Salon Grand</div>
+          <a href="https://www.steinway.com/pianos/steinway/grand/model-a" target="_blank" rel="noreferrer"
+            class="model-link">Explore</a>
+        </div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-card-inner"
+          style="background-image: url('images/models/model-o-high-res.png'); background-size: auto 138%; background-position: 51% 104%;">
+        </div>
+        <div class="model-card-bar"></div>
+        <div class="model-card-content">
+          <div class="model-size">5′ 10¾″</div>
+          <div class="model-name">Model O</div>
+          <div class="model-tagline">Living Room Grand</div>
+          <a href="https://www.steinway.com/pianos/steinway/grand/model-o" target="_blank" rel="noreferrer"
+            class="model-link">Explore</a>
+        </div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-card-inner"
+          style="background-image: url('images/models/model-m-high-res.png'); background-size: auto 150%; background-position: 56% 93%;">
+        </div>
+        <div class="model-card-bar"></div>
+        <div class="model-card-content">
+          <div class="model-size">5′ 7″</div>
+          <div class="model-name">Model M</div>
+          <div class="model-tagline">Medium Grand</div>
+          <a href="https://www.steinway.com/pianos/steinway/grand/model-m" target="_blank" rel="noreferrer"
+            class="model-link">Explore</a>
+        </div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-card-inner"
+          style="background-image: url('images/models/model-s-high-res.png'); background-size: auto 130%; background-position: 50% 120%;">
+        </div>
+        <div class="model-card-bar"></div>
+        <div class="model-card-content">
+          <div class="model-size">5′ 1″</div>
+          <div class="model-name">Model S</div>
+          <div class="model-tagline">Baby Grand</div>
+          <a href="https://www.steinway.com/pianos/steinway/grand/model-s" target="_blank" rel="noreferrer"
+            class="model-link">Explore</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="features-header">
+      <p class="section-eyebrow">Why Steinway</p>
+      <h2 class="section-title">Built by Hand.<br>Played for Life.</h2>
+      <p class="section-body">Over 170 years of craft, innovation, and an uncompromising commitment to the art of piano
+        making.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-number">01</div>
+        <h3 class="feature-name">Unmatched Craftsmanship</h3>
+        <div class="feature-rule"></div>
+        <p class="feature-text">Every Steinway grand is built by hand over nearly a year — more than 12,000 parts
+          assembled with a precision no machine can replicate.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-number">02</div>
+        <h3 class="feature-name">The Steinway Sound</h3>
+        <div class="feature-rule"></div>
+        <p class="feature-text">A singular, unmistakable voice developed across generations — warm, rich, and deeply
+          responsive to every nuance of the artist's touch.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-number">03</div>
+        <h3 class="feature-name">A Living Legacy</h3>
+        <div class="feature-rule"></div>
+        <p class="feature-text">9 out of 10 concert pianists perform on Steinway. From Carnegie Hall to private studies,
+          the world's greatest musicians choose one instrument.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT + FOOTER share stage.png background -->
+  <div class="contact-footer-wrap">
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-eyebrow">Experience Steinway</p>
+    <h2 class="section-title">Find Your Piano</h2>
+    <p class="section-body">Visit a Steinway gallery and discover the instrument that speaks to you.</p>
+    <div class="contact-actions">
+      <a href="https://www.steinway.com/dealers" target="_blank" rel="noreferrer" class="btn-primary">Find a Dealer</a>
+      <a href="#" class="btn-secondary" id="contact-modal-btn">Request Information</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">
+      <img src="S&S_logo/steinway-and-sons.svg" alt="Steinway &amp; Sons">
+    </div>
+    <p class="footer-copy">© 2026 Steinway &amp; Sons. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="privacy.html">Privacy Policy</a></li>
+      <li><a href="terms.html">Terms of Use</a></li>
+      <li><a href="#" id="footer-contact-btn">Contact</a></li>
+    </ul>
+  </footer>
+
+  </div><!-- /.contact-footer-wrap -->
+
+  <!-- Request Information Modal -->
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <p class="modal-eyebrow">Get in Touch</p>
+      <h2 class="modal-title" id="modal-title">Request Information</h2>
+      <form class="modal-form" id="modal-form" novalidate>
+        <input type="text" name="name" placeholder="Full Name" required autocomplete="name">
+        <input type="email" name="email" placeholder="Email Address" required autocomplete="email">
+        <input type="tel" name="phone" placeholder="Phone Number (optional)" autocomplete="tel">
+        <textarea name="message" placeholder="Tell us about your interest — model, occasion, or any questions." autocomplete="off"></textarea>
+        <button type="submit" class="modal-submit">Send Request</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const video = document.getElementById('piano-video');
+    const overlay = document.getElementById('piano-overlay');
+    const progressFill = document.getElementById('progress-fill');
+
+    function initPianoScrollTrigger() {
+      ScrollTrigger.create({
+        trigger: '#piano-reveal',
+        start: 'top top',
+        end: '+=250%',
+        pin: true,
+        scrub: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onEnter: () => {
+          gsap.killTweensOf(overlay);
+          gsap.to(overlay, { opacity: 0, duration: 0.6, ease: 'power2.out' });
+        },
+        onLeaveBack: () => {
+          gsap.killTweensOf(overlay);
+          gsap.to(overlay, { opacity: 1, duration: 0.4, ease: 'power2.in', onComplete: () => {
+            video.currentTime = 0;
+            progressFill.style.transform = 'scaleX(0)';
+          }});
+        },
+        onUpdate: (self) => {
+          video.currentTime = self.progress * video.duration;
+          progressFill.style.transform = `scaleX(${self.progress})`;
+        },
+      });
+      ScrollTrigger.refresh();
+    }
+
+    if (video.readyState >= 1) {
+      initPianoScrollTrigger();
+    } else {
+      video.addEventListener('loadedmetadata', initPianoScrollTrigger, { once: true });
+    }
+
+    window.addEventListener('resize', () => ScrollTrigger.refresh());
+    window.addEventListener('load', () => ScrollTrigger.refresh());
+
+    // ── Hamburger menu ────────────────────────────────────
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobile-nav');
+    const mobileNavLinks = mobileNav.querySelectorAll('.mobile-nav-link');
+
+    function closeMobileNav() {
+      hamburger.classList.remove('open');
+      mobileNav.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileNav.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', closeMobileNav);
+    });
+
+    // ── Modal ─────────────────────────────────────────────
+    const backdrop = document.getElementById('modal-backdrop');
+    const modalForm = document.getElementById('modal-form');
+
+    function openModal() {
+      closeMobileNav();
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('nav-cta-btn').addEventListener('click', openModal);
+    document.getElementById('mobile-modal-btn').addEventListener('click', openModal);
+    document.getElementById('contact-modal-btn').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    document.getElementById('footer-contact-btn').addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    const supabase = window.supabase.createClient(
+      'https://atsyopngdfsopkfhxwhi.supabase.co',
+      'sb_publishable_XUCYj2PDkJTthJfPacCkPA_BumQl_8L'
+    );
+
+    modalForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = modalForm.querySelector('.modal-submit');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+
+      const { error } = await supabase.from('leads').insert({
+        name: modalForm.name.value.trim(),
+        email: modalForm.email.value.trim(),
+        phone: modalForm.phone.value.trim() || null,
+        message: modalForm.message.value.trim() || null,
+      });
+
+      if (error) {
+        btn.textContent = 'Something went wrong — try again';
+        btn.style.background = '#a00';
+        btn.disabled = false;
+        setTimeout(() => {
+          btn.textContent = 'Send Request';
+          btn.style.background = '';
+        }, 3000);
+        return;
+      }
+
+      btn.textContent = 'Sent — Thank You';
+      btn.style.background = '#2a6e3f';
+      setTimeout(() => {
+        closeModal();
+        modalForm.reset();
+        btn.textContent = 'Send Request';
+        btn.style.background = '';
+        btn.disabled = false;
+      }, 2200);
+    });
+
+    // ── Hero text entrance ────────────────────────────────────
+    gsap.from('.hero-inner > *', {
+      opacity: 0,
+      y: 32,
+      stagger: 0.12,
+      duration: 1.1,
+      ease: 'power3.out',
+      delay: 0.2,
+    });
+
+    // ── Model cards entrance ──────────────────────────────────
+    gsap.from('.model-card', {
+      opacity: 0,
+      y: 56,
+      stagger: 0.08,
+      duration: 0.9,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.models-grid',
+        start: 'top 82%',
+        once: true,
+        invalidateOnRefresh: true,
+      }
+    });
+
+    // ── Feature items entrance ────────────────────────────────
+    gsap.to('.feature-item', {
+      opacity: 1,
+      y: 0,
+      stagger: 0.15,
+      duration: 1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: '.features-grid',
+        start: 'top 78%',
+        once: true,
+        invalidateOnRefresh: true,
+      }
+    });
+  </script>
+</body>
+
+</html>

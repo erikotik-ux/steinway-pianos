@@ -1,0 +1,14 @@
+# Python scripts (internal tooling, not part of the site)
+save_*.py
+upload_*.py
+pinecone_*.py
+
+# Backups
+_backup/
+backup.html
+
+# Misc
+*.pyc
+__pycache__/
+.DS_Store
+Thumbs.db
