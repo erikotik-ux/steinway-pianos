@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model S — Steinway &amp; Sons</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --red: #B60000; --text: #000; --muted: #60666F; --bg: #f6f5f3; --gray-mid: #DEDEDE; }
+    body { font-family: 'Manrope', sans-serif; background: #fff; color: var(--text); }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 72px; background: rgba(255,255,255,0.97); backdrop-filter: blur(10px); border-bottom: 1px solid var(--gray-mid); display: flex; align-items: center; justify-content: space-between; padding: 0 48px; }
+    .nav-logo img { height: 32px; display: block; }
+    .nav-back { font-size: 13px; font-weight: 500; color: var(--muted); text-decoration: none; letter-spacing: 0.02em; transition: color 0.2s; }
+    .nav-back:hover { color: var(--text); }
+    .model-hero { margin-top: 72px; min-height: calc(100vh - 72px); background: var(--bg); display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 80px 48px; gap: 40px; }
+    .hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); margin-bottom: 20px; }
+    .hero-title { font-family: 'Libre Baskerville', serif; font-size: clamp(72px, 12vw, 130px); font-weight: 700; letter-spacing: -0.03em; line-height: 1; margin-bottom: 20px; }
+    .hero-tagline { font-size: clamp(16px, 1.8vw, 20px); font-weight: 300; color: var(--muted); margin-bottom: 10px; letter-spacing: 0.02em; }
+    .hero-size { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 48px; }
+    .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-image { display: flex; align-items: center; justify-content: flex-end; }
+    .hero-image img { max-height: 72vh; max-width: 100%; object-fit: contain; display: block; }
+    .divider { height: 1px; background: var(--gray-mid); margin: 0 48px; }
+    .model-body { max-width: 1200px; margin: 0 auto; padding: 100px 48px; display: grid; grid-template-columns: 1fr 360px; gap: 80px; align-items: start; }
+    .body-text h2 { font-family: 'Libre Baskerville', serif; font-size: clamp(28px, 3.5vw, 44px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 32px; }
+    .body-text p { font-size: 16px; line-height: 1.85; color: #444; margin-bottom: 20px; }
+    .model-cta { display: flex; gap: 16px; margin-top: 48px; flex-wrap: wrap; }
+    .btn-primary { display: inline-block; padding: 16px 36px; background: var(--text); color: #fff; font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-primary:hover { background: var(--red); }
+    .btn-secondary { display: inline-block; padding: 16px 36px; background: transparent; color: var(--text); font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; border: 1.5px solid #000; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { background: #000; color: #fff; }
+    .model-specs { position: sticky; top: 100px; background: var(--bg); padding: 40px; }
+    .specs-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); margin-bottom: 28px; }
+    .spec-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--gray-mid); }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+    .spec-value { font-size: 14px; font-weight: 500; color: var(--text); text-align: right; }
+    footer { border-top: 1px solid var(--gray-mid); padding: 32px 48px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+    .modal-backdrop.open { display: flex; }
+    .modal { background: #faf9f7; width: 100%; max-width: 560px; padding: 56px 48px 48px; position: relative; }
+    .modal-close { position: absolute; top: 20px; right: 24px; background: none; border: none; cursor: pointer; font-size: 28px; color: #888; line-height: 1; padding: 4px; transition: color 0.2s; }
+    .modal-close:hover { color: #111; }
+    .modal-eyebrow { font-family: 'Manrope', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
+    .modal-title { font-family: 'Libre Baskerville', serif; font-size: 28px; font-weight: 400; color: #111; margin-bottom: 32px; }
+    .modal-form { display: flex; flex-direction: column; gap: 16px; }
+    .modal-form input, .modal-form textarea { width: 100%; padding: 14px 16px; background: #fff; border: 1px solid #ddd; border-radius: 0; font-family: 'Manrope', sans-serif; font-size: 14px; color: #111; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
+    .modal-form input:focus, .modal-form textarea:focus { border-color: #999; }
+    .modal-form textarea { resize: vertical; min-height: 100px; }
+    .modal-form input::placeholder, .modal-form textarea::placeholder { color: #aaa; }
+    .modal-submit { margin-top: 8px; background: #111; color: #fff; font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; border: none; padding: 18px 36px; cursor: pointer; transition: background 0.2s; align-self: flex-start; }
+    .modal-submit:hover { background: var(--red); }
+    @media (max-width: 900px) { .model-hero { grid-template-columns: 1fr; padding: 60px 32px; min-height: auto; } .hero-image { justify-content: center; order: -1; } .hero-image img { max-height: 40vh; } .model-body { grid-template-columns: 1fr; gap: 48px; padding: 80px 32px; } .model-specs { position: static; } }
+    @media (max-width: 600px) { nav { padding: 0 20px; } .model-hero { padding: 48px 20px; } .model-body { padding: 60px 20px; } .divider { margin: 0 20px; } footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; } .modal { padding: 48px 24px 36px; } .modal-title { font-size: 22px; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="S&S_logo/steinway-and-sons.svg" alt="Steinway &amp; Sons"></a>
+    <a href="index.html#models" class="nav-back">← All Pianos</a>
+  </nav>
+  <section class="model-hero">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Grand Piano</p>
+      <h1 class="hero-title">Model S</h1>
+      <p class="hero-tagline">Baby Grand</p>
+      <p class="hero-size">5′ 1″</p>
+      <div class="hero-cta">
+        <button class="btn-primary" id="hero-modal-btn">Request Information</button>
+        <a href="index.html#models" class="btn-secondary">View All Models</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="images/models/model-s-high-res.png" alt="Steinway Model S Baby Grand">
+    </div>
+  </section>
+  <div class="divider"></div>
+  <div class="model-body">
+    <div class="body-text">
+      <h2>The smallest Steinway. Every bit a Steinway.</h2>
+      <p>The Steinway Model S is the smallest of the Steinway grand pianos — and one of the most remarkable. In just over five feet of length, it delivers a genuine Steinway tone: singing, dynamic, and unmistakably alive.</p>
+      <p>The Model S was designed for spaces where every inch matters, without compromise on musical integrity. Its action carries the hallmarks of all Steinway instruments — precision, responsiveness, and the ability to translate the pianist's intention into sound with extraordinary faithfulness.</p>
+      <p>For first-time Steinway owners, and for those whose love of music is bounded only by space, the Model S is a worthy entry into a lifelong relationship with the world's finest piano.</p>
+      <div class="model-cta">
+        <button class="btn-primary" id="body-modal-btn">Request Information</button>
+        <a href="find-a-dealer.html" class="btn-secondary">Find a Dealer</a>
+      </div>
+    </div>
+    <div class="model-specs">
+      <p class="specs-eyebrow">Specifications</p>
+      <div class="spec-row"><span class="spec-label">Length</span><span class="spec-value">5′ 1″ &nbsp;/&nbsp; 155 cm</span></div>
+      <div class="spec-row"><span class="spec-label">Width</span><span class="spec-value">57⅞″ &nbsp;/&nbsp; 147 cm</span></div>
+      <div class="spec-row"><span class="spec-label">Weight</span><span class="spec-value">495 lbs &nbsp;/&nbsp; 224 kg</span></div>
+      <div class="spec-row"><span class="spec-label">Keys</span><span class="spec-value">88</span></div>
+      <div class="spec-row"><span class="spec-label">Pedals</span><span class="spec-value">3</span></div>
+      <div class="spec-row"><span class="spec-label">Type</span><span class="spec-value">Baby Grand</span></div>
+    </div>
+  </div>
+  <footer>
+    <span>© 2026 Steinway &amp; Sons. All rights reserved.</span>
+    <span><a href="privacy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="terms.html">Terms of Use</a></span>
+  </footer>
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <p class="modal-eyebrow">Get in Touch</p>
+      <h2 class="modal-title" id="modal-title">Request Information</h2>
+      <form class="modal-form" id="modal-form" novalidate>
+        <input type="text" name="name" placeholder="Full Name" required autocomplete="name">
+        <input type="email" name="email" placeholder="Email Address" required autocomplete="email">
+        <input type="tel" name="phone" placeholder="Phone Number (optional)" autocomplete="tel">
+        <textarea name="message" placeholder="Tell us about your interest — model, occasion, or any questions.">I'm interested in the Model S Baby Grand.</textarea>
+        <button type="submit" class="modal-submit">Send Request</button>
+      </form>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script>
+    const backdrop = document.getElementById('modal-backdrop');
+    const modalForm = document.getElementById('modal-form');
+    function openModal() { backdrop.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeModal() { backdrop.classList.remove('open'); document.body.style.overflow = ''; }
+    document.getElementById('hero-modal-btn').addEventListener('click', openModal);
+    document.getElementById('body-modal-btn').addEventListener('click', openModal);
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    let supabaseClient = null;
+    try { supabaseClient = window.supabase.createClient('https://atsyopngdfsopkfhxwhi.supabase.co', 'sb_publishable_XUCYj2PDkJTthJfPacCkPA_BumQl_8L'); } catch (e) { console.warn('Supabase failed to initialize:', e); }
+    modalForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = modalForm.querySelector('.modal-submit');
+      btn.textContent = 'Sending…'; btn.disabled = true;
+      try {
+        if (!supabaseClient) throw new Error('Supabase not available');
+        const { error } = await supabaseClient.from('leads').insert({ name: modalForm.name.value.trim(), email: modalForm.email.value.trim(), phone: modalForm.phone.value.trim() || null, message: modalForm.message.value.trim() || null });
+        if (error) throw error;
+      } catch (e) {
+        btn.textContent = 'Something went wrong — try again'; btn.style.background = '#a00'; btn.disabled = false;
+        setTimeout(() => { btn.textContent = 'Send Request'; btn.style.background = ''; }, 3000); return;
+      }
+      btn.textContent = 'Sent — Thank You'; btn.style.background = '#2a6e3f';
+      setTimeout(() => { closeModal(); modalForm.reset(); btn.textContent = 'Send Request'; btn.style.background = ''; btn.disabled = false; }, 2200);
+    });
+  </script>
+</body>
+</html>
