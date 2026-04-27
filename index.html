@@ -839,9 +839,9 @@
       .hero-sub { font-size: 13px; }
       .hero-est { font-size: 10px; }
 
-      /* Piano reveal — 30px top gap + video height + 64px label space */
+      /* Piano reveal — 30px top gap + 16:9 video + 80px label space */
       #piano-reveal {
-        height: calc(56.25vw + 94px);
+        height: calc(56.25vw + 130px);
         padding-top: 0;
         margin-top: 0;
       }
@@ -851,10 +851,10 @@
         bottom: auto;
         height: 56.25vw;
         object-fit: contain;
-        transform: scale(1.25);
+        transform: none;
       }
 
-      .reveal-label { left: 24px; bottom: 20px; }
+      .reveal-label { left: 24px; bottom: 16px; }
       .reveal-headline { font-size: clamp(24px, 6vw, 40px); }
 
       /* Models */
