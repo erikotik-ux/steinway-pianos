@@ -1154,11 +1154,11 @@
           let last = null;
           function step(ts) {
             if (last !== null) {
-              video.currentTime = Math.max(0, video.currentTime - (ts - last) / 700);
+              video.currentTime = Math.max(0, video.currentTime - (ts - last) / 580);
             }
             last = ts;
             if (video.currentTime <= 0) {
-              setTimeout(() => video.play().catch(() => {}), 700);
+              setTimeout(() => { video.playbackRate = 1.4; video.play().catch(() => {}); }, 700);
               return;
             }
             rafId = requestAnimationFrame(step);
@@ -1175,7 +1175,7 @@
         const pianoObserver = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting) {
             gsap.to(overlay, { opacity: 0, duration: 1, ease: 'power2.out' });
-            video.play().catch(() => {});
+            video.playbackRate = 1.4; video.play().catch(() => {});
             pianoObserver.disconnect();
           }
         }, { threshold: 0.25 });
