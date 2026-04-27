@@ -839,22 +839,22 @@
       .hero-sub { font-size: 13px; }
       .hero-est { font-size: 10px; }
 
-      /* Piano reveal — height matches video AR so contain has no gaps */
+      /* Piano reveal — 30px top gap + video height + 64px label space */
       #piano-reveal {
-        height: auto;
-        aspect-ratio: 16 / 9;
+        height: calc(56.25vw + 94px);
         padding-top: 0;
         margin-top: 0;
       }
 
       #piano-video {
-        top: 0;
-        bottom: 0;
-        height: 100%;
+        top: 30px;
+        bottom: auto;
+        height: 56.25vw;
         object-fit: contain;
+        transform: scale(1.25);
       }
 
-      .reveal-label { left: 24px; bottom: 40px; }
+      .reveal-label { left: 24px; bottom: 20px; }
       .reveal-headline { font-size: clamp(24px, 6vw, 40px); }
 
       /* Models */
