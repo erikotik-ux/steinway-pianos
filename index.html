@@ -841,13 +841,13 @@
 
       /* Piano reveal — 50px top gap + scaled video + label space */
       #piano-reveal {
-        height: calc(74vw + 228px);
+        height: calc(74vw + 208px);
         padding-top: 0;
         margin-top: 0;
       }
 
       #piano-video {
-        top: 70px;
+        top: 60px;
         bottom: auto;
         height: 56.25vw;
         object-fit: contain;
@@ -1154,11 +1154,11 @@
           let last = null;
           function step(ts) {
             if (last !== null) {
-              video.currentTime = Math.max(0, video.currentTime - (ts - last) / 1000);
+              video.currentTime = Math.max(0, video.currentTime - (ts - last) / 700);
             }
             last = ts;
             if (video.currentTime <= 0) {
-              setTimeout(() => video.play().catch(() => {}), 1000);
+              setTimeout(() => video.play().catch(() => {}), 700);
               return;
             }
             rafId = requestAnimationFrame(step);
@@ -1168,7 +1168,7 @@
 
         video.addEventListener('ended', () => {
           video.pause();
-          setTimeout(reverseVideo, 1000);
+          setTimeout(reverseVideo, 700);
         });
 
         const pianoSection = document.getElementById('piano-reveal');
