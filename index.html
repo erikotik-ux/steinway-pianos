@@ -1123,7 +1123,7 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
@@ -1220,10 +1220,15 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    const supabase = window.supabase.createClient(
-      'https://atsyopngdfsopkfhxwhi.supabase.co',
-      'sb_publishable_XUCYj2PDkJTthJfPacCkPA_BumQl_8L'
-    );
+    let supabaseClient = null;
+    try {
+      supabaseClient = window.supabase.createClient(
+        'https://atsyopngdfsopkfhxwhi.supabase.co',
+        'sb_publishable_XUCYj2PDkJTthJfPacCkPA_BumQl_8L'
+      );
+    } catch (e) {
+      console.warn('Supabase failed to initialize:', e);
+    }
 
     modalForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1231,14 +1236,16 @@
       btn.textContent = 'Sending…';
       btn.disabled = true;
 
-      const { error } = await supabase.from('leads').insert({
-        name: modalForm.name.value.trim(),
-        email: modalForm.email.value.trim(),
-        phone: modalForm.phone.value.trim() || null,
-        message: modalForm.message.value.trim() || null,
-      });
-
-      if (error) {
+      try {
+        if (!supabaseClient) throw new Error('Supabase not available');
+        const { error } = await supabaseClient.from('leads').insert({
+          name: modalForm.name.value.trim(),
+          email: modalForm.email.value.trim(),
+          phone: modalForm.phone.value.trim() || null,
+          message: modalForm.message.value.trim() || null,
+        });
+        if (error) throw error;
+      } catch (e) {
         btn.textContent = 'Something went wrong — try again';
         btn.style.background = '#a00';
         btn.disabled = false;
