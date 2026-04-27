@@ -839,14 +839,19 @@
       .hero-sub { font-size: 13px; }
       .hero-est { font-size: 10px; }
 
-      /* Piano reveal — full height, piano fits width without cropping */
-      #piano-reveal { padding-top: 0; margin-top: -10px; }
+      /* Piano reveal — height matches video AR so contain has no gaps */
+      #piano-reveal {
+        height: auto;
+        aspect-ratio: 16 / 9;
+        padding-top: 0;
+        margin-top: 0;
+      }
 
       #piano-video {
         top: 0;
         bottom: 0;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
       }
 
       .reveal-label { left: 24px; bottom: 40px; }
