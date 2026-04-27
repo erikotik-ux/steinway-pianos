@@ -52,8 +52,8 @@
     .contact-item { font-size: 13px; color: var(--muted); }
     .contact-item strong { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); margin-bottom: 3px; }
 
-    .regions { margin-top: 64px; border-top: 1px solid var(--gray-mid); padding-top: 64px; }
-    .regions-title { font-family: 'Libre Baskerville', serif; font-size: clamp(24px, 3vw, 36px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 48px; }
+    .regions { max-width: 1200px; margin: 0 auto; padding: 0 56px 100px; border-top: 1px solid var(--gray-mid); }
+    .regions-title { font-family: 'Libre Baskerville', serif; font-size: clamp(24px, 3vw, 36px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 48px; padding-top: 64px; }
     .regions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
     .region-card { background: var(--bg); padding: 40px 32px; }
     .region-name { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); margin-bottom: 12px; }
@@ -87,7 +87,7 @@
       nav { padding: 0 20px; }
       .page-hero { padding: 0 20px 40px; height: 50vh; background-position: 80% 30%; }
       .page-body { padding: 60px 20px; }
-      .regions { padding-top: 48px; }
+      .regions { padding: 0 20px 60px; }
       .regions-grid { grid-template-columns: 1fr; }
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; }
       .modal { padding: 48px 24px 36px; }
@@ -122,35 +122,6 @@
         <a href="index.html#models" class="btn-secondary">View All Models</a>
       </div>
 
-      <div class="regions">
-        <h2 class="regions-title">Our Global Presence</h2>
-        <div class="regions-grid">
-          <div class="region-card">
-            <p class="region-name">North America</p>
-            <p class="region-desc">Showrooms across the United States and Canada, including our flagship gallery in New York City.</p>
-          </div>
-          <div class="region-card">
-            <p class="region-name">Europe</p>
-            <p class="region-desc">Authorized dealers throughout the UK, Germany, France, Austria, Switzerland, and across the continent.</p>
-          </div>
-          <div class="region-card">
-            <p class="region-name">Asia Pacific</p>
-            <p class="region-desc">Galleries in Japan, China, South Korea, Australia, and throughout Southeast Asia.</p>
-          </div>
-          <div class="region-card">
-            <p class="region-name">Middle East</p>
-            <p class="region-desc">Authorized showrooms in the UAE, Saudi Arabia, and across the region.</p>
-          </div>
-          <div class="region-card">
-            <p class="region-name">Latin America</p>
-            <p class="region-desc">Dealer locations in Brazil, Argentina, Mexico, and select markets throughout the region.</p>
-          </div>
-          <div class="region-card">
-            <p class="region-name">Africa</p>
-            <p class="region-desc">Authorized representation in South Africa and select regional markets.</p>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="sidebar">
@@ -167,6 +138,36 @@
           <strong>Hours</strong>
           Mon – Fri, 9am – 6pm EST
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="regions">
+    <h2 class="regions-title">Our Global Presence</h2>
+    <div class="regions-grid">
+      <div class="region-card">
+        <p class="region-name">North America</p>
+        <p class="region-desc">Showrooms across the United States and Canada, including our flagship gallery in New York City.</p>
+      </div>
+      <div class="region-card">
+        <p class="region-name">Europe</p>
+        <p class="region-desc">Authorized dealers throughout the UK, Germany, France, Austria, Switzerland, and across the continent.</p>
+      </div>
+      <div class="region-card">
+        <p class="region-name">Asia Pacific</p>
+        <p class="region-desc">Galleries in Japan, China, South Korea, Australia, and throughout Southeast Asia.</p>
+      </div>
+      <div class="region-card">
+        <p class="region-name">Middle East</p>
+        <p class="region-desc">Authorized showrooms in the UAE, Saudi Arabia, and across the region.</p>
+      </div>
+      <div class="region-card">
+        <p class="region-name">Latin America</p>
+        <p class="region-desc">Dealer locations in Brazil, Argentina, Mexico, and select markets throughout the region.</p>
+      </div>
+      <div class="region-card">
+        <p class="region-name">Africa</p>
+        <p class="region-desc">Authorized representation in South Africa and select regional markets.</p>
       </div>
     </div>
   </div>
