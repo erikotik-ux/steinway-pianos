@@ -34,19 +34,21 @@
       margin-top: 72px;
       min-height: calc(100vh - 72px);
       background: var(--bg);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      position: relative;
+      display: flex;
       align-items: center;
       padding: 80px 48px;
-      gap: 40px;
+      overflow: hidden;
     }
+    .hero-text { position: relative; z-index: 2; width: 50%; }
     .hero-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); margin-bottom: 20px; }
     .hero-title { font-family: 'Libre Baskerville', serif; font-size: clamp(72px, 12vw, 130px); font-weight: 700; letter-spacing: -0.03em; line-height: 1; margin-bottom: 20px; }
     .hero-tagline { font-size: clamp(16px, 1.8vw, 20px); font-weight: 300; color: var(--muted); margin-bottom: 10px; letter-spacing: 0.02em; }
     .hero-size { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 48px; }
     .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
-    .hero-image { display: flex; align-items: center; justify-content: flex-end; }
-    .hero-image img { max-height: 72vh; max-width: 100%; object-fit: contain; display: block; }
+    .hero-image { position: absolute; right: 0; top: 0; bottom: 0; width: 52%; }
+    .hero-image img { width: 100%; height: 100%; object-fit: contain; object-position: right center; display: block; }
+    .hero-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 45%); pointer-events: none; }
 
     .divider { height: 1px; background: var(--gray-mid); margin: 0 48px; }
 
@@ -92,9 +94,11 @@
     .modal-submit:hover { background: var(--red); }
 
     @media (max-width: 900px) {
-      .model-hero { grid-template-columns: 1fr; padding: 60px 32px; min-height: auto; }
-      .hero-image { justify-content: center; order: -1; }
-      .hero-image img { max-height: 40vh; }
+      .model-hero { flex-direction: column; padding: 60px 32px; min-height: auto; }
+      .hero-text { width: 100%; }
+      .hero-image { position: static; width: 100%; height: 40vh; order: -1; }
+      .hero-image img { object-position: center center; }
+      .hero-image::after { display: none; }
       .model-body { grid-template-columns: 1fr; gap: 48px; padding: 80px 32px; }
       .model-specs { position: static; }
     }
