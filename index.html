@@ -1134,13 +1134,42 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
     gsap.registerPlugin(ScrollTrigger);
-    ScrollTrigger.normalizeScroll(true);
 
     const video = document.getElementById('piano-video');
     const overlay = document.getElementById('piano-overlay');
     const progressFill = document.getElementById('progress-fill');
 
     function initPianoScrollTrigger() {
+      if (window.innerWidth <= 768) {
+        gsap.to(overlay, { opacity: 0, duration: 1, delay: 0.4, ease: 'power2.out' });
+
+        let rafId = null;
+
+        function reverseVideo() {
+          let last = null;
+          function step(ts) {
+            if (last !== null) {
+              video.currentTime = Math.max(0, video.currentTime - (ts - last) / 1000);
+            }
+            last = ts;
+            if (video.currentTime <= 0) {
+              setTimeout(() => video.play().catch(() => {}), 2500);
+              return;
+            }
+            rafId = requestAnimationFrame(step);
+          }
+          rafId = requestAnimationFrame(step);
+        }
+
+        video.addEventListener('ended', () => {
+          video.pause();
+          setTimeout(reverseVideo, 2500);
+        });
+
+        video.play().catch(() => {});
+        return;
+      }
+
       ScrollTrigger.create({
         trigger: '#piano-reveal',
         start: 'top top',
