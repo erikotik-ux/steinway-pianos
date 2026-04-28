@@ -1172,17 +1172,11 @@
           setTimeout(reverseVideo, 700);
         });
 
-        const pianoSection = document.getElementById('piano-reveal');
-        let videoStarted = false;
-        const pianoObserver = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting && !videoStarted) {
-            videoStarted = true;
-            video.playbackRate = 1.4;
-            video.play().catch(() => {});
-            pianoObserver.disconnect();
-          }
-        }, { threshold: 0.1 });
-        pianoObserver.observe(pianoSection);
+        video.setAttribute('autoplay', '');
+        video.setAttribute('loop', '');
+        video.playbackRate = 1.4;
+        video.load();
+
         return;
       }
 
