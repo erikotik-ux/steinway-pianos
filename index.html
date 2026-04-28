@@ -250,6 +250,13 @@
       will-change: transform;
     }
 
+    #piano-video::-webkit-media-controls,
+    #piano-video::-webkit-media-controls-start-playback-button,
+    #piano-video::-webkit-media-controls-panel {
+      display: none !important;
+      -webkit-appearance: none;
+    }
+
     /* Overlay color matches section bg so fade-in looks seamless */
     #piano-overlay {
       position: absolute;
