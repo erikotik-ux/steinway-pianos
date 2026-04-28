@@ -857,6 +857,7 @@
         transform-origin: top center;
       }
 
+      #piano-overlay { display: none; }
       .reveal-label { left: 24px; bottom: 56px; }
       .reveal-headline { font-size: clamp(28px, 8vw, 56px); }
 
@@ -1148,8 +1149,6 @@
 
     function initPianoScrollTrigger() {
       if (window.innerWidth <= 768) {
-        gsap.to(overlay, { opacity: 0, duration: 1, delay: 0.4, ease: 'power2.out' });
-
         let rafId = null;
 
         function reverseVideo() {
@@ -1175,16 +1174,11 @@
 
         const pianoSection = document.getElementById('piano-reveal');
         let videoStarted = false;
-        function startVideo() {
-          if (videoStarted) return;
-          videoStarted = true;
-          gsap.to(overlay, { opacity: 0, duration: 1, ease: 'power2.out' });
-          video.playbackRate = 1.4;
-          video.play().catch(() => {});
-        }
         const pianoObserver = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting) {
-            startVideo();
+          if (entries[0].isIntersecting && !videoStarted) {
+            videoStarted = true;
+            video.playbackRate = 1.4;
+            video.play().catch(() => {});
             pianoObserver.disconnect();
           }
         }, { threshold: 0.1 });
