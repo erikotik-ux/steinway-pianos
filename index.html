@@ -1219,7 +1219,9 @@
       ScrollTrigger.refresh();
     }
 
-    if (video.readyState >= 1) {
+    if (window.innerWidth <= 768) {
+      initPianoScrollTrigger();
+    } else if (video.readyState >= 1) {
       initPianoScrollTrigger();
     } else {
       video.addEventListener('loadedmetadata', initPianoScrollTrigger, { once: true });
