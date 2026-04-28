@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steinway Pianos — Anatomy of Perfection</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f1eb;--gold:#7a5c14;--gold-dim:rgba(100,72,16,0.12);
+  --white:#1a1008;--dim:rgba(26,16,8,0.52);--border:rgba(90,60,12,0.18);
+}
+html,body{width:100%;background:var(--bg);font-family:'Georgia',serif;color:var(--white)}
+#c{position:fixed;top:0;left:0;width:100%;height:100%}
+
+/* ── Brand ── */
+#brand{position:fixed;top:44px;left:52px;z-index:20;pointer-events:none}
+#brand-name{font-size:12px;letter-spacing:7px;text-transform:uppercase;color:var(--gold);font-weight:normal}
+#brand-sub{font-size:9px;letter-spacing:3px;color:var(--dim);margin-top:5px;font-style:italic}
+#brand-line{width:100%;height:1px;background:var(--border);margin-top:12px}
+
+/* ── Model Selector ── */
+#models{position:fixed;top:44px;right:44px;z-index:20;display:flex;flex-direction:column;gap:6px}
+.model-btn{
+  background:rgba(245,241,235,0.82);border:1px solid var(--border);color:var(--dim);
+  font-family:'Georgia',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  padding:9px 18px;cursor:pointer;transition:all 0.3s ease;text-align:right;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)
+}
+.model-btn:hover,.model-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(122,92,20,0.07)}
+.model-size{display:block;font-size:8px;opacity:0.55;margin-top:2px;font-style:italic}
+
+/* ── Component Sidebar ── */
+#sidebar{
+  position:fixed;left:52px;top:50%;transform:translateY(-50%);
+  z-index:20;display:flex;flex-direction:column;gap:5px;pointer-events:none
+}
+.comp-row{
+  display:flex;align-items:center;gap:9px;
+  font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(26,16,8,0.22);transition:color 0.4s ease
+}
+.comp-row.lit{color:var(--gold)}
+.comp-dot{width:3px;height:3px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* ── Labels ── */
+#labels{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:15}
+.lbl{
+  position:absolute;transform:translate(10px,-50%);
+  opacity:0;transition:opacity 0.6s ease;pointer-events:none
+}
+.lbl.show{opacity:1}
+.lbl-name{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.lbl-desc{font-size:7.5px;color:var(--dim);letter-spacing:1px;margin-top:2px;font-style:italic;white-space:nowrap}
+.lbl-line{
+  position:absolute;top:50%;left:-22px;width:18px;height:1px;
+  background:linear-gradient(to left,var(--gold),rgba(122,92,20,0));
+}
+
+/* ── Bottom Bar ── */
+#bottom{
+  position:fixed;bottom:44px;left:50%;transform:translateX(-50%);
+  z-index:20;display:flex;align-items:center;gap:20px
+}
+.ctrl{
+  background:rgba(245,241,235,0.88);border:1px solid var(--border);color:var(--dim);
+  font-family:'Georgia',serif;font-size:9px;letter-spacing:4px;text-transform:uppercase;
+  padding:11px 28px;cursor:pointer;transition:all 0.3s ease;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)
+}
+.ctrl:hover,.ctrl.on{border-color:var(--gold);color:var(--gold);background:rgba(122,92,20,0.07)}
+.sep{width:1px;height:22px;background:var(--border)}
+
+/* ── Progress ── */
+#prog-wrap{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:20;width:180px;text-align:center}
+#prog-lbl{font-size:8px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:7px}
+#prog-track{width:100%;height:1px;background:rgba(90,60,12,0.15);position:relative}
+#prog-fill{height:100%;background:var(--gold);width:0%;box-shadow:0 0 6px var(--gold);transition:none}
+
+/* ── Anatomy Title ── */
+#anat{position:fixed;bottom:44px;left:52px;z-index:20;opacity:0;transition:opacity 1s ease}
+#anat.show{opacity:1}
+#anat h2{font-size:10px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);font-weight:normal}
+#anat p{font-size:9px;color:var(--dim);letter-spacing:2px;margin-top:4px;font-style:italic}
+
+/* ── Tooltip ── */
+#tooltip{
+  position:fixed;bottom:44px;right:44px;z-index:20;
+  font-size:10px;letter-spacing:1px;color:var(--dim);text-align:right;
+  opacity:0.5;font-style:italic
+}
+
+/* ── Scroll Driver ── */
+#scroller{height:500vh;pointer-events:none}
+
+/* ── Scroll Hint ── */
+#scroll-hint{
+  position:fixed;bottom:44px;left:50%;transform:translateX(-50%);
+  z-index:25;display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:1;transition:opacity 1.2s ease;pointer-events:none
+}
+#scroll-hint.gone{opacity:0}
+.sh-text{font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--dim)}
+.sh-arrow{
+  width:1px;height:34px;
+  background:linear-gradient(to bottom,rgba(122,92,20,0),var(--gold));
+  animation:shPulse 1.8s ease-in-out infinite
+}
+@keyframes shPulse{
+  0%,100%{opacity:0.25;transform:scaleY(0.75)}
+  50%{opacity:1;transform:scaleY(1)}
+}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="scroller"></div>
+
+<div id="brand">
+  <div id="brand-name">Steinway Pianos</div>
+  <div id="brand-sub">The Art of Piano Craftsmanship Since 1853</div>
+  <div id="brand-line"></div>
+</div>
+
+<div id="models">
+  <button class="model-btn active" data-s="1.00">Concert Grand<span class="model-size">9 ft · 274 cm</span></button>
+  <button class="model-btn" data-s="0.84">Semi-Concert Grand<span class="model-size">7 ft · 211 cm</span></button>
+  <button class="model-btn" data-s="0.70">Baby Grand<span class="model-size">5 ft · 152 cm</span></button>
+  <button class="model-btn" data-s="0.56">Professional Upright<span class="model-size">52 in · 132 cm</span></button>
+  <button class="model-btn" data-s="0.48">Studio Upright<span class="model-size">45 in · 114 cm</span></button>
+</div>
+
+<div id="sidebar"></div>
+<div id="labels"></div>
+
+<div id="prog-wrap">
+  <div id="prog-lbl">Assembled</div>
+  <div id="prog-track"><div id="prog-fill"></div></div>
+</div>
+
+<div id="bottom">
+  <button class="ctrl" id="btn-a">↑ Assemble</button>
+  <div class="sep"></div>
+  <button class="ctrl" id="btn-d">↓ Dismantle</button>
+</div>
+
+<div id="scroll-hint">
+  <div class="sh-text">Scroll to dismantle</div>
+  <div class="sh-arrow"></div>
+</div>
+
+<div id="anat"><h2>Anatomy of Perfection</h2><p>12,000 parts. One instrument.</p></div>
+<div id="tooltip">Drag to rotate · Scroll to zoom</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+// ─── RENDERER ────────────────────────────────────────────────────────────────
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf5f1eb);
+scene.fog = new THREE.FogExp2(0xf5f1eb, 0.028);
+
+const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 200);
+camera.position.set(6, 5, 9);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.045;
+controls.target.set(0, 0.2, 0);
+controls.minDistance = 4;
+controls.maxDistance = 22;
+controls.maxPolarAngle = Math.PI * 0.78;
+
+// ─── POST-PROCESSING ─────────────────────────────────────────────────────────
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.55, 0.45, 0.18);
+composer.addPass(bloom);
+
+// ─── LIGHTING ────────────────────────────────────────────────────────────────
+const key = new THREE.DirectionalLight(0xfff8f0, 2.2);
+key.position.set(-5, 9, 6);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.camera.left = key.shadow.camera.bottom = -12;
+key.shadow.camera.right = key.shadow.camera.top = 12;
+key.shadow.camera.far = 40;
+scene.add(key);
+
+const fill = new THREE.DirectionalLight(0xd8e4f0, 0.7);
+fill.position.set(8, 2, -5);
+scene.add(fill);
+
+const rim = new THREE.DirectionalLight(0xd4b060, 0.6);
+rim.position.set(0, -5, -8);
+scene.add(rim);
+
+scene.add(new THREE.AmbientLight(0xf0e8d8, 3.0));
+
+const goldPt = new THREE.PointLight(0xc8a040, 1.2, 10);
+goldPt.position.set(0, 1, 0);
+scene.add(goldPt);
+
+const coldPt = new THREE.PointLight(0x8090c0, 0.4, 14);
+coldPt.position.set(-6, 4, 6);
+scene.add(coldPt);
+
+// ─── MATERIALS ───────────────────────────────────────────────────────────────
+const M = {
+  ebony:    new THREE.MeshStandardMaterial({ color:0x100a06, metalness:0.35, roughness:0.12 }),
+  ebonyMat: new THREE.MeshStandardMaterial({ color:0x180e08, metalness:0.1,  roughness:0.55 }),
+  plate:    new THREE.MeshStandardMaterial({ color:0xc89828, metalness:0.92, roughness:0.22, emissive:0x3a2000, emissiveIntensity:0.4 }),
+  spruce:   new THREE.MeshStandardMaterial({ color:0xc89060, metalness:0.0,  roughness:0.72 }),
+  maple:    new THREE.MeshStandardMaterial({ color:0xa07040, metalness:0.0,  roughness:0.65 }),
+  steel:    new THREE.MeshStandardMaterial({ color:0xd8d8d8, metalness:0.97, roughness:0.04, emissive:0x707070, emissiveIntensity:0.08 }),
+  copper:   new THREE.MeshStandardMaterial({ color:0xb07830, metalness:0.92, roughness:0.15 }),
+  brass:    new THREE.MeshStandardMaterial({ color:0xb8941f, metalness:0.95, roughness:0.12, emissive:0x251400, emissiveIntensity:0.25 }),
+  ivoryW:   new THREE.MeshStandardMaterial({ color:0xf2ede0, metalness:0.0,  roughness:0.28 }),
+  ebonyK:   new THREE.MeshStandardMaterial({ color:0x0c0c0c, metalness:0.25, roughness:0.18 }),
+  felt:     new THREE.MeshStandardMaterial({ color:0x2a4428, metalness:0.0,  roughness:1.0  }),
+  feltR:    new THREE.MeshStandardMaterial({ color:0x7a1818, metalness:0.0,  roughness:1.0  }),
+  hammer:   new THREE.MeshStandardMaterial({ color:0xeadec4, metalness:0.0,  roughness:0.85 }),
+  pin:      new THREE.MeshStandardMaterial({ color:0xc0c0c0, metalness:1.0,  roughness:0.06 }),
+  action:   new THREE.MeshStandardMaterial({ color:0x5a2e10, metalness:0.0,  roughness:0.72 }),
+};
+
+// ─── COMPONENT SYSTEM ────────────────────────────────────────────────────────
+// delay 0..1 → right-to-left, top-to-bottom reveal order
+const defs = [];
+function C(name, label, desc, geo, mat, aP, aR, eP, eR, delay) {
+  defs.push({ name, label, desc, geo, mat,
+    aP: new THREE.Vector3(...aP), aR: new THREE.Euler(...aR),
+    eP: new THREE.Vector3(...eP), eR: new THREE.Euler(...eR), delay });
+}
+
+// ── Lid (top-right, delay 0) ─────────────────────────────────────────────────
+C('lid','Lid','Hand-lacquered spruce & maple lid with nickel prop stick',
+  new THREE.BoxGeometry(3.9,0.055,2.55), M.ebony,
+  [0,0.48,0],[0,0,0], [1.8,3.8,-1.6],[0.38,0.1,-0.28], 0.00);
+
+// ── Music Desk ───────────────────────────────────────────────────────────────
+C('desk','Music Desk','Adjustable music rest in hand-polished ebony',
+  new THREE.BoxGeometry(1.9,0.038,0.48), M.ebony,
+  [0,0.5,-0.82],[0.52,0,0], [0.8,2.6,-3.2],[0.82,0.08,0], 0.04);
+
+// ── Cast Iron Plate (top-right, delay 0.10) ───────────────────────────────────
+C('plate','Cast Iron Plate','Gold-lacquered cast iron harp · 20 tons string tension',
+  new THREE.BoxGeometry(3.65,0.048,2.35), M.plate,
+  [0,0.22,0],[0,0,0], [2.6,3.0,0.2],[0.05,0.12,0.15], 0.10);
+
+// ── Tuning Pins (right side, delay 0.14) ─────────────────────────────────────
+C('pins','Tuning Pins','236 forged steel pins hand-set in solid maple pinblock',
+  new THREE.BoxGeometry(1.65,0.11,0.17), M.pin,
+  [0.78,0.38,-0.97],[0,0,0], [3.6,2.0,-2.8],[0,0.18,0], 0.14);
+
+// ── Treble Strings (right, delay 0.18) ───────────────────────────────────────
+C('strT1','Treble Strings','High-carbon steel wire · treble register, triple-strung',
+  new THREE.BoxGeometry(0.52,0.022,1.85), M.steel,
+  [1.25,0.15,-0.08],[0,0,0], [4.8,1.4,0.6],[0,0.12,0.08], 0.18);
+C('strT2','Upper Mid Strings','Steel wire strings · upper-middle register',
+  new THREE.BoxGeometry(0.40,0.022,1.75), M.steel,
+  [0.78,0.15,-0.08],[0,0,0], [3.6,1.1,1.2],[0,0.08,0], 0.24);
+C('strM','Mid Strings','Steel wire strings · middle register',
+  new THREE.BoxGeometry(0.36,0.022,1.90), M.steel,
+  [0.15,0.15,-0.05],[0,0,0], [0.4,1.8,3.2],[0,-0.08,0], 0.30);
+C('strB','Bass Strings','Copper-wound steel bass strings · hand-wound to specification',
+  new THREE.BoxGeometry(0.44,0.028,2.05), M.copper,
+  [-0.78,0.15,-0.04],[0,0,0], [-4.2,1.2,0.8],[0,-0.14,0], 0.38);
+
+// ── Bridges (center, delay 0.33) ─────────────────────────────────────────────
+C('brgT','Treble Bridge','Curved maple bridge · transmits string vibration to soundboard',
+  new THREE.BoxGeometry(2.45,0.075,0.11), M.maple,
+  [0.28,0.08,0.22],[0,0.14,0], [2.2,0.6,3.8],[0,0.28,0], 0.33);
+C('brgB','Bass Bridge','Separate bass bridge · isolated for optimal bass resonance',
+  new THREE.BoxGeometry(0.82,0.075,0.09), M.maple,
+  [-0.95,0.08,-0.32],[0,-0.42,0], [-4.8,0.5,-0.4],[0,-0.52,0], 0.40);
+
+// ── Dampers (center-right, delay 0.44) ───────────────────────────────────────
+C('damp','Dampers','Wool-felt dampers · silence strings upon key release',
+  new THREE.BoxGeometry(2.85,0.055,0.11), M.felt,
+  [0,0.24,0.28],[0,0,0], [-0.5,2.8,2.2],[0.1,0.08,0], 0.44);
+
+// ── Hammer Action (center, delay 0.48) ───────────────────────────────────────
+C('action','Action Assembly','Over 5,000 precision parts · the "soul" of the piano',
+  new THREE.BoxGeometry(3.05,0.14,0.48), M.action,
+  [0,-0.04,0.52],[0,0,0], [1.2,1.0,4.2],[0.18,0,0], 0.48);
+C('hammers','Hammers','Multi-layer wool felt hammers · individually hand-voiced',
+  new THREE.BoxGeometry(2.88,0.075,0.075), M.hammer,
+  [0,0.1,0.32],[0,0,0], [0,1.4,4.8],[0.3,0,0], 0.50);
+
+// ── Hammer Rail ──────────────────────────────────────────────────────────────
+C('rail','Hammer Rail','Felt-lined hammer rest rail in solid maple',
+  new THREE.BoxGeometry(3.0,0.04,0.065), M.feltR,
+  [0,0.18,0.28],[0,0,0], [-1.5,2.0,3.8],[0.15,0,0], 0.52);
+
+// ── Keys: black first then white (front, delay 0.54–0.62) ────────────────────
+C('bkeyT','Black Keys (Treble)','Ebony-topped sharps & flats · treble section',
+  new THREE.BoxGeometry(1.55,0.09,0.21), M.ebonyK,
+  [0.78,-0.12,0.78],[0,0,0], [3.8,0.9,4.6],[0.08,0.08,0], 0.54);
+C('bkeyB','Black Keys (Bass)','Ebony-topped sharps & flats · bass section',
+  new THREE.BoxGeometry(1.25,0.09,0.21), M.ebonyK,
+  [-0.65,-0.12,0.78],[0,0,0], [-3.5,0.9,4.6],[0.08,-0.08,0], 0.56);
+C('wkeyT','White Keys (Treble)','Spruce-core keys with premium keytops · treble octaves',
+  new THREE.BoxGeometry(1.65,0.055,0.38), M.ivoryW,
+  [0.82,-0.18,0.9],[0,0,0], [3.8,0.3,3.8],[0,0.1,0], 0.58);
+C('wkeyB','White Keys (Bass)','Spruce-core keys · bass octaves, 8 ft compass',
+  new THREE.BoxGeometry(1.35,0.055,0.38), M.ivoryW,
+  [-0.68,-0.18,0.9],[0,0,0], [-3.5,0.3,3.8],[0,-0.1,0], 0.62);
+
+// ── Fallboard ────────────────────────────────────────────────────────────────
+C('fall','Fallboard','Soft-close keyboard lid in ebony lacquer with brass hinges',
+  new THREE.BoxGeometry(3.02,0.038,0.14), M.ebony,
+  [0,-0.11,1.12],[0,0,0], [-1.5,1.6,5.2],[0.2,-0.1,0], 0.64);
+
+// ── Soundboard (center, delay 0.66) ──────────────────────────────────────────
+C('board','Soundboard','Select Sitka spruce soundboard · crowned for ideal resonance',
+  new THREE.BoxGeometry(3.72,0.032,2.38), M.spruce,
+  [0,-0.02,0],[0,0,0], [0,-1.8,-1.8],[0.14,0,0], 0.66);
+
+// ── Cabinet Body (center, delay 0.70) ────────────────────────────────────────
+C('cabBot','Cabinet Floor','Laminated maple base — foundation of the case',
+  new THREE.BoxGeometry(4.05,0.55,2.88), M.ebonyMat,
+  [0,-0.29,0],[0,0,0], [0.4,-1.8,0],[0,0.04,0], 0.70);
+C('cabRim','Cabinet Rim','Multi-ply bent maple rim · 17 individual plies',
+  new THREE.BoxGeometry(4.05,0.55,0.11), M.ebony,
+  [0,-0.29,-1.38],[0,0,0], [-2.8,-0.6,-3.2],[0,-0.18,0], 0.73);
+C('cabSpine','Cabinet Spine','Straight spine rail — structural backbone',
+  new THREE.BoxGeometry(0.11,0.55,2.88), M.ebony,
+  [-1.98,-0.29,0],[0,0,0], [-5.5,-0.8,0],[0,0,-0.12], 0.75);
+
+// ── Lyre & Pedals (bottom, delay 0.80+) ──────────────────────────────────────
+C('lyre','Pedal Lyre','Hand-carved lyre bracket housing the pedal mechanism',
+  new THREE.BoxGeometry(0.58,1.22,0.14), M.ebonyMat,
+  [0,-1.32,1.06],[0,0,0], [0,-3.2,4.2],[0.1,0,0], 0.80);
+
+C('pL','Una Corda Pedal','Soft pedal · shifts entire action for una corda effect',
+  new THREE.BoxGeometry(0.13,0.055,0.38), M.brass,
+  [-0.21,-1.85,1.22],[0,0,0.05], [-3.2,-3.4,4.8],[0,0.18,0], 0.84);
+C('pM','Sostenuto Pedal','Sostenuto · sustains only notes held at time of depression',
+  new THREE.BoxGeometry(0.13,0.055,0.38), M.brass,
+  [0,-1.88,1.22],[0,0,0], [0,-3.6,5.2],[0,0,0], 0.85);
+C('pR','Sustain Pedal','Damper pedal · lifts all dampers simultaneously',
+  new THREE.BoxGeometry(0.13,0.055,0.38), M.brass,
+  [0.21,-1.85,1.22],[0,0,-0.05], [3.2,-3.4,4.8],[0,-0.18,0], 0.86);
+
+// ── Legs (bottom, delay 0.90) ─────────────────────────────────────────────────
+const legG = new THREE.CylinderGeometry(0.095,0.075,1.5,14);
+C('legFR','Front Right Leg','Turned ebony leg with brass ferrule and locking caster',
+  legG, M.ebony, [1.65,-1.25,0.92],[0,0,0], [5.2,-2.6,3.8],[0,0.28,0], 0.90);
+C('legFL','Front Left Leg','Turned ebony leg with brass ferrule and locking caster',
+  legG, M.ebony, [-1.65,-1.25,0.92],[0,0,0], [-5.2,-2.6,3.8],[0,-0.28,0], 0.91);
+C('legR','Rear Leg','Rear center leg with heavy-duty locking caster',
+  legG, M.ebony, [0,-1.25,-1.25],[0,0,0], [0,-3.6,-5.2],[0,0,0.1], 0.93);
+
+// ─── FINE STRING DETAIL (instanced cylinders, fan across Z axis) ─────────────
+// These are decorative — they live inside the cabinet and are revealed as the
+// plate and lid fly away, before the string-slab components animate out.
+(function buildStringDetail() {
+  const dummy = new THREE.Object3D();
+
+  // Treble — 52 thin steel wires along Z
+  const tg = new THREE.CylinderGeometry(0.004, 0.004, 1.88, 4);
+  const tm = new THREE.InstancedMesh(tg, M.steel, 52);
+  for (let i = 0; i < 52; i++) {
+    dummy.position.set(0.22 + i * 0.038, 0.155, -0.08);
+    dummy.rotation.set(Math.PI / 2, 0, 0); // lay along Z
+    dummy.updateMatrix();
+    tm.setMatrixAt(i, dummy.matrix);
+  }
+  tm.instanceMatrix.needsUpdate = true;
+  pianoGroup.add(tm);
+
+  // Bass — 24 copper-wound wires, slightly thicker
+  const bg = new THREE.CylinderGeometry(0.007, 0.007, 2.08, 4);
+  const bm = new THREE.InstancedMesh(bg, M.copper, 24);
+  for (let i = 0; i < 24; i++) {
+    dummy.position.set(-0.22 - i * 0.058, 0.155, -0.04);
+    dummy.rotation.set(Math.PI / 2, 0, 0);
+    dummy.updateMatrix();
+    bm.setMatrixAt(i, dummy.matrix);
+  }
+  bm.instanceMatrix.needsUpdate = true;
+  pianoGroup.add(bm);
+})();
+
+// ─── BUILD SCENE GRAPH ────────────────────────────────────────────────────────
+const pianoGroup = new THREE.Group();
+scene.add(pianoGroup);
+
+const components = defs.map(d => {
+  const mesh = new THREE.Mesh(d.geo, d.mat);
+  mesh.position.copy(d.aP);
+  mesh.rotation.copy(d.aR);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  pianoGroup.add(mesh);
+  return { ...d, mesh };
+});
+
+// Ground reflection plane
+const gnd = new THREE.Mesh(
+  new THREE.PlaneGeometry(60, 60),
+  new THREE.MeshStandardMaterial({ color:0xe8e2d8, metalness:0.05, roughness:0.75, transparent:true, opacity:0.7 })
+);
+gnd.rotation.x = -Math.PI/2;
+gnd.position.y = -2.3;
+gnd.receiveShadow = true;
+scene.add(gnd);
+
+// Star particles
+const starBuf = new Float32Array(3000*3);
+for (let i=0;i<starBuf.length;i++) starBuf[i]=(Math.random()-0.5)*70;
+const starGeo = new THREE.BufferGeometry();
+starGeo.setAttribute('position', new THREE.BufferAttribute(starBuf,3));
+scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({
+  color:0x7a5c14, size:0.014, transparent:true, opacity:0.12
+})));
+
+// ─── HTML LABELS + SIDEBAR ────────────────────────────────────────────────────
+const labelsEl = document.getElementById('labels');
+const sidebar  = document.getElementById('sidebar');
+const lblMap   = {};
+const rowMap   = {};
+
+components.forEach(c => {
+  // Label
+  const div = document.createElement('div');
+  div.className = 'lbl';
+  div.innerHTML = `<div class="lbl-line"></div><div class="lbl-name">${c.label}</div><div class="lbl-desc">${c.desc}</div>`;
+  labelsEl.appendChild(div);
+  lblMap[c.name] = div;
+
+  // Sidebar row
+  const row = document.createElement('div');
+  row.className = 'comp-row';
+  row.innerHTML = `<div class="comp-dot"></div><span>${c.label}</span>`;
+  sidebar.appendChild(row);
+  rowMap[c.name] = row;
+});
+
+// ─── ANIMATION STATE ─────────────────────────────────────────────────────────
+let gT = 0, targetT = 0;
+let cScale = 1.0, targetScale = 1.0;
+
+const ease = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+const compT = (gT, delay) => {
+  const start = delay * 0.68;
+  return Math.max(0, Math.min(1, (gT - start) / 0.44));
+};
+
+// ─── LABEL PROJECTION ────────────────────────────────────────────────────────
+const pv = new THREE.Vector3();
+function updateLabels() {
+  const showL = gT > 0.72;
+  components.forEach(c => {
+    const t = compT(gT, c.delay);
+    const el = lblMap[c.name];
+    const row = rowMap[c.name];
+    if (!el) return;
+
+    if (t < 0.92 || !showL) {
+      el.classList.remove('show');
+      row && row.classList.remove('lit');
+      return;
+    }
+
+    pv.copy(c.mesh.position);
+    pianoGroup.localToWorld(pv);
+    pv.project(camera);
+    if (pv.z > 1) { el.classList.remove('show'); return; }
+
+    const x = (pv.x * 0.5 + 0.5) * innerWidth;
+    const y = (-pv.y * 0.5 + 0.5) * innerHeight;
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+    el.classList.add('show');
+    row && row.classList.add('lit');
+  });
+
+  if (!showL) Object.values(rowMap).forEach(r => r.classList.remove('lit'));
+}
+
+// ─── UI WIRING ───────────────────────────────────────────────────────────────
+const progFill = document.getElementById('prog-fill');
+const progLbl  = document.getElementById('prog-lbl');
+const anatEl   = document.getElementById('anat');
+const scrollHint = document.getElementById('scroll-hint');
+const btnA = document.getElementById('btn-a');
+const btnD = document.getElementById('btn-d');
+
+btnA.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+btnD.onclick = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+document.querySelectorAll('.model-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    targetScale = parseFloat(btn.dataset.s);
+  });
+});
+
+// ─── SCROLL TRIGGER ──────────────────────────────────────────────────────────
+const { gsap, ScrollTrigger } = window;
+gsap.registerPlugin(ScrollTrigger);
+
+let hasScrolled = false;
+
+ScrollTrigger.create({
+  trigger: '#scroller',
+  start: 'top top',
+  end: 'bottom bottom',
+  scrub: true,
+  onUpdate(self) {
+    targetT = self.progress;
+
+    if (!hasScrolled && self.progress > 0.01) {
+      hasScrolled = true;
+      scrollHint.classList.add('gone');
+    }
+
+    progLbl.textContent = self.direction === 1 ? 'Dismantling' : 'Assembling';
+
+    if (self.progress < 0.02) {
+      progLbl.textContent = 'Assembled';
+      anatEl.classList.remove('show');
+      btnA.classList.add('on');
+      btnD.classList.remove('on');
+    } else if (self.progress > 0.97) {
+      progLbl.textContent = 'Dismantled';
+      anatEl.classList.add('show');
+      btnD.classList.add('on');
+      btnA.classList.remove('on');
+    } else {
+      anatEl.classList.toggle('show', self.progress > 0.85);
+      btnA.classList.remove('on');
+      btnD.classList.remove('on');
+    }
+  }
+});
+
+// ─── RENDER LOOP ─────────────────────────────────────────────────────────────
+const clock = new THREE.Clock();
+let ft = 0;
+
+function tick() {
+  requestAnimationFrame(tick);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  ft += dt * 0.28;
+
+  gT      += (targetT     - gT)      * dt * 0.72;
+  cScale  += (targetScale - cScale)  * dt * 1.8;
+  gT       = Math.max(0, Math.min(1, gT));
+  pianoGroup.scale.setScalar(cScale);
+
+  components.forEach(c => {
+    const t = ease(compT(gT, c.delay));
+    c.mesh.position.lerpVectors(c.aP, c.eP, t);
+    c.mesh.rotation.x = c.aR.x + (c.eR.x - c.aR.x) * t;
+    c.mesh.rotation.y = c.aR.y + (c.eR.y - c.aR.y) * t;
+    c.mesh.rotation.z = c.aR.z + (c.eR.z - c.aR.z) * t;
+    if (t > 0.9) {
+      c.mesh.position.y += Math.sin(ft * 0.9 + c.delay * 18) * 0.018;
+    }
+  });
+
+  goldPt.intensity  = 1.0 + Math.sin(ft * 1.8) * 0.3;
+  goldPt.position.y = 0.8 + Math.sin(ft * 0.7) * 0.4;
+
+  progFill.style.width = (gT * 100).toFixed(1) + '%';
+  updateLabels();
+  controls.update();
+  composer.render();
+}
+tick();
+
+// ─── RESIZE ──────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  composer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
