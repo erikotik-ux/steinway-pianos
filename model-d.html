@@ -46,8 +46,8 @@
     .hero-tagline { font-size: clamp(16px, 1.8vw, 20px); font-weight: 300; color: var(--muted); margin-bottom: 10px; letter-spacing: 0.02em; }
     .hero-size { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 48px; }
     .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
-    .hero-image { position: absolute; right: 0; top: 0; bottom: 0; width: 52%; }
-    .hero-image img { width: 100%; height: 100%; object-fit: contain; object-position: right center; display: block; }
+    .hero-image { position: absolute; right: 0; top: 0; bottom: 0; width: 55%; overflow: hidden; }
+    .hero-image img { position: absolute; right: 0; top: 0; height: 100%; width: auto; max-width: none; display: block; }
     .hero-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 45%); pointer-events: none; }
 
     .divider { height: 1px; background: var(--gray-mid); margin: 0 48px; }
@@ -94,11 +94,11 @@
     .modal-submit:hover { background: var(--red); }
 
     @media (max-width: 900px) {
-      .model-hero { flex-direction: column; padding: 60px 32px; min-height: auto; }
-      .hero-text { width: 100%; }
-      .hero-image { position: static; width: 100%; height: 40vh; order: -1; }
-      .hero-image img { object-position: center center; }
-      .hero-image::after { display: none; }
+      .model-hero { flex-direction: column; padding: 0 0 60px; min-height: auto; }
+      .hero-text { width: 100%; padding: 0 32px; }
+      .hero-image { position: relative; width: 100%; height: 50vh; overflow: hidden; order: -1; }
+      .hero-image img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; max-width: none; }
+      .hero-image::after { display: block; background: linear-gradient(to bottom, transparent 40%, var(--bg) 100%); }
       .model-body { grid-template-columns: 1fr; gap: 48px; padding: 80px 32px; }
       .model-specs { position: static; }
     }
