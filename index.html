@@ -1179,10 +1179,13 @@
           setTimeout(reverseVideo, 700);
         });
 
-        video.setAttribute('autoplay', '');
         video.setAttribute('loop', '');
-        video.playbackRate = 1.4;
         video.load();
+        video.addEventListener('canplay', function handler() {
+          video.removeEventListener('canplay', handler);
+          video.playbackRate = 1.4;
+          video.play().catch(() => {});
+        });
 
         return;
       }
