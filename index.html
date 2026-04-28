@@ -960,7 +960,7 @@
 
   <!-- PIANO REVEAL — scroll-scrubbed video, separate pinned section -->
   <section id="piano-reveal">
-    <video id="piano-video" muted playsinline preload="auto">
+    <video id="piano-video" muted playsinline preload="auto" autoplay loop>
       <source src="video/disassembly_scrub.mp4" type="video/mp4">
     </video>
 
@@ -1156,39 +1156,14 @@
 
     function initPianoScrollTrigger() {
       if (window.innerWidth <= 768) {
-        let rafId = null;
-
-        function reverseVideo() {
-          let last = null;
-          function step(ts) {
-            if (last !== null) {
-              video.currentTime = Math.max(0, video.currentTime - (ts - last) / 580);
-            }
-            last = ts;
-            if (video.currentTime <= 0) {
-              setTimeout(() => { video.playbackRate = 1.4; video.play().catch(() => {}); }, 700);
-              return;
-            }
-            rafId = requestAnimationFrame(step);
-          }
-          rafId = requestAnimationFrame(step);
-        }
-
-        video.addEventListener('ended', () => {
-          video.pause();
-          setTimeout(reverseVideo, 700);
-        });
-
-        video.setAttribute('loop', '');
-        video.load();
-        video.addEventListener('canplay', function handler() {
-          video.removeEventListener('canplay', handler);
-          video.playbackRate = 1.4;
-          video.play().catch(() => {});
-        });
-
+        video.playbackRate = 1.4;
         return;
       }
+
+      video.removeAttribute('autoplay');
+      video.removeAttribute('loop');
+      video.pause();
+      video.currentTime = 0;
 
       ScrollTrigger.create({
         trigger: '#piano-reveal',
