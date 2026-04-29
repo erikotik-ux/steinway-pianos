@@ -1156,21 +1156,38 @@
 
     function initPianoScrollTrigger() {
       if (window.innerWidth <= 768) {
-        const pianoSection = document.getElementById('piano-reveal');
-        let videoStarted = false;
+        let rafId = null;
 
-        function tryPlay() {
-          if (videoStarted) return;
-          const rect = pianoSection.getBoundingClientRect();
-          if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
-            videoStarted = true;
-            video.playbackRate = 1.4;
-            video.play().catch(() => {});
-            window.removeEventListener('scroll', tryPlay, { passive: true });
+        function reverseVideo() {
+          let last = null;
+          function step(ts) {
+            if (last !== null) {
+              video.currentTime = Math.max(0, video.currentTime - (ts - last) / 580);
+            }
+            last = ts;
+            if (video.currentTime <= 0) {
+              setTimeout(() => { video.playbackRate = 1.4; video.play().catch(() => {}); }, 700);
+              return;
+            }
+            rafId = requestAnimationFrame(step);
           }
+          rafId = requestAnimationFrame(step);
         }
 
-        window.addEventListener('scroll', tryPlay, { passive: true });
+        video.addEventListener('ended', () => {
+          video.pause();
+          setTimeout(reverseVideo, 700);
+        });
+
+        const pianoSection = document.getElementById('piano-reveal');
+        const pianoObserver = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            video.playbackRate = 1.4;
+            video.play().catch(() => {});
+            pianoObserver.disconnect();
+          }
+        }, { threshold: 0.1 });
+        pianoObserver.observe(pianoSection);
         return;
       }
 
