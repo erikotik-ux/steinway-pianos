@@ -812,14 +812,21 @@
 
     /* ── Responsive ─────────────────────────────────────── */
     @media (min-width: 769px) and (max-width: 1024px) {
+      /* Nav — hamburger replaces full links */
       nav { padding: 0 32px; }
-      .nav-left, .nav-right { gap: 24px; }
+      .nav-left, .nav-right { display: none; }
+      .nav-center { position: absolute; left: 50%; transform: translateX(-50%); }
+      .hamburger { display: flex; }
+      /* Hero — use portrait image */
+      #hero { background-image: url('images/backgorund-images/man-playing-mobile.png'); }
+      /* Sections */
       #models { padding: 80px 40px; }
       .models-header { margin-bottom: 48px; }
       #features { padding: 80px 40px; }
       .features-header { margin-bottom: 56px; }
       #contact { padding: 100px 40px; }
       footer { padding: 28px 32px; }
+      /* Piano animation */
       #piano-overlay { display: none; }
       #piano-reveal { height: calc(56.25vw + 180px); padding-top: 0; }
       #piano-video { top: 72px; bottom: auto; height: 56.25vw; object-fit: contain; transform: none; }
