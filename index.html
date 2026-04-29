@@ -817,8 +817,9 @@
       .nav-left, .nav-right { display: none; }
       .nav-center { position: absolute; left: 50%; transform: translateX(-50%); }
       .hamburger { display: flex; }
-      /* Hero — use portrait image */
+      /* Hero — use portrait image and match mobile title proportions */
       #hero { background-image: url('images/backgorund-images/man-playing-mobile.png'); }
+      .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
       /* Sections */
       #models { padding: 80px 40px; }
       .models-header { margin-bottom: 48px; }
