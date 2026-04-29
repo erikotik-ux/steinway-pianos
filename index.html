@@ -1157,6 +1157,7 @@
     function initPianoScrollTrigger() {
       if (window.innerWidth <= 768) {
         let rafId = null;
+        let inView = false;
 
         function reverseVideo() {
           let last = null;
@@ -1174,11 +1175,33 @@
           rafId = requestAnimationFrame(step);
         }
 
-        video.playbackRate = 1.4;
         video.addEventListener('ended', () => {
           video.pause();
           setTimeout(reverseVideo, 700);
         });
+
+        const pianoSection = document.getElementById('piano-reveal');
+        const pianoObserver = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting) {
+            inView = true;
+            video.playbackRate = 1.4;
+            video.play().catch(() => {});
+            pianoObserver.disconnect();
+          }
+        }, { threshold: 0.1 });
+        pianoObserver.observe(pianoSection);
+
+        // touchstart is a guaranteed user gesture on iOS — fires on first scroll swipe
+        function tryPlayOnTouch() {
+          if (inView && video.paused) {
+            video.playbackRate = 1.4;
+            video.play().catch(() => {});
+          }
+          if (!video.paused) {
+            document.removeEventListener('touchstart', tryPlayOnTouch);
+          }
+        }
+        document.addEventListener('touchstart', tryPlayOnTouch, { passive: true });
 
         return;
       }
