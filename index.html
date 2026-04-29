@@ -960,7 +960,7 @@
 
   <!-- PIANO REVEAL — scroll-scrubbed video, separate pinned section -->
   <section id="piano-reveal">
-    <video id="piano-video" muted playsinline preload="auto">
+    <video id="piano-video" autoplay muted playsinline preload="auto">
       <source src="video/disassembly_scrub.mp4" type="video/mp4">
     </video>
 
@@ -1157,12 +1157,6 @@
     function initPianoScrollTrigger() {
       if (window.innerWidth <= 768) {
         let rafId = null;
-        let playRequested = false;
-
-        function doPlay() {
-          video.playbackRate = 1.4;
-          video.play().catch(() => setTimeout(doPlay, 300));
-        }
 
         function reverseVideo() {
           let last = null;
@@ -1180,27 +1174,19 @@
           rafId = requestAnimationFrame(step);
         }
 
+        video.playbackRate = 1.4;
         video.addEventListener('ended', () => {
           video.pause();
           setTimeout(reverseVideo, 700);
         });
 
-        const pianoSection = document.getElementById('piano-reveal');
-        const pianoObserver = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting) {
-            playRequested = true;
-            doPlay();
-            pianoObserver.disconnect();
-          }
-        }, { threshold: 0.1 });
-        pianoObserver.observe(pianoSection);
-
-        video.addEventListener('canplay', () => {
-          if (playRequested) doPlay();
-        }, { once: true });
-
         return;
       }
+
+      // Desktop: remove autoplay, reset, then hand off to ScrollTrigger scrub
+      video.removeAttribute('autoplay');
+      video.pause();
+      video.currentTime = 0;
 
       ScrollTrigger.create({
         trigger: '#piano-reveal',
