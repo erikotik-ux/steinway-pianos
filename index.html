@@ -813,12 +813,17 @@
     /* ── Responsive ─────────────────────────────────────── */
     @media (min-width: 769px) and (max-width: 1024px) {
       nav { padding: 0 32px; }
+      .nav-left, .nav-right { gap: 24px; }
       #models { padding: 80px 40px; }
       .models-header { margin-bottom: 48px; }
       #features { padding: 80px 40px; }
       .features-header { margin-bottom: 56px; }
       #contact { padding: 100px 40px; }
       footer { padding: 28px 32px; }
+      #piano-overlay { display: none; }
+      #piano-reveal { height: calc(56.25vw + 180px); padding-top: 0; }
+      #piano-video { top: 72px; bottom: auto; height: 56.25vw; object-fit: contain; transform: none; }
+      .reveal-label { left: 32px; bottom: 36px; }
     }
 
     @media (max-width: 900px) {
@@ -1169,7 +1174,7 @@
     const progressFill = document.getElementById('progress-fill');
 
     function initPianoScrollTrigger() {
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 1024) {
         let rafId = null;
         let inView = false;
 
@@ -1252,7 +1257,7 @@
       ScrollTrigger.refresh();
     }
 
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1024) {
       initPianoScrollTrigger();
     } else if (video.readyState >= 1) {
       initPianoScrollTrigger();
