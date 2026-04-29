@@ -93,6 +93,14 @@
     .modal-submit { margin-top: 8px; background: #111; color: #fff; font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; border: none; padding: 18px 36px; cursor: pointer; transition: background 0.2s; align-self: flex-start; }
     .modal-submit:hover { background: var(--red); }
 
+    @media (min-width: 901px) and (max-width: 1024px) {
+      nav { padding: 0 32px; }
+      .model-hero { padding: 56px 32px; }
+      .divider { margin: 0 32px; }
+      .model-body { padding: 72px 32px; gap: 48px; grid-template-columns: 1fr 300px; }
+      footer { padding: 24px 32px; }
+    }
+
     @media (max-width: 900px) {
       .model-hero { flex-direction: column; padding: 0 0 60px; min-height: auto; }
       .hero-text { width: 100%; padding: 0 32px; }

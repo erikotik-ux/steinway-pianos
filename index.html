@@ -811,6 +811,16 @@
     .modal-submit:hover { background: var(--red); }
 
     /* ── Responsive ─────────────────────────────────────── */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      nav { padding: 0 32px; }
+      #models { padding: 80px 40px; }
+      .models-header { margin-bottom: 48px; }
+      #features { padding: 80px 40px; }
+      .features-header { margin-bottom: 56px; }
+      #contact { padding: 100px 40px; }
+      footer { padding: 28px 32px; }
+    }
+
     @media (max-width: 900px) {
       .models-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
       .features-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
