@@ -34,6 +34,10 @@
       scroll-behavior: smooth;
     }
 
+    @media (max-width: 768px) {
+      html { scroll-behavior: auto; }
+    }
+
     body {
       font-family: 'Manrope', sans-serif;
       background: var(--bg);
@@ -1246,8 +1250,10 @@
       video.addEventListener('loadedmetadata', initPianoScrollTrigger, { once: true });
     }
 
-    window.addEventListener('resize', () => ScrollTrigger.refresh());
-    window.addEventListener('load', () => ScrollTrigger.refresh());
+    if (window.innerWidth > 768) {
+      window.addEventListener('resize', () => ScrollTrigger.refresh());
+      window.addEventListener('load', () => ScrollTrigger.refresh());
+    }
 
     // ── Hamburger menu ────────────────────────────────────
     const hamburger = document.getElementById('hamburger');
