@@ -1157,13 +1157,11 @@
     function initPianoScrollTrigger() {
       if (window.innerWidth <= 768) {
         let rafId = null;
-        let videoStarted = false;
+        let playRequested = false;
 
-        function startVideo() {
-          if (videoStarted) return;
-          videoStarted = true;
+        function doPlay() {
           video.playbackRate = 1.4;
-          video.play().catch(() => {});
+          video.play().catch(() => setTimeout(doPlay, 300));
         }
 
         function reverseVideo() {
@@ -1187,24 +1185,19 @@
           setTimeout(reverseVideo, 700);
         });
 
-        // Pre-fetch video data
-        video.load();
-
-        // Trigger on scroll into view
         const pianoSection = document.getElementById('piano-reveal');
         const pianoObserver = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting) {
-            startVideo();
+            playRequested = true;
+            doPlay();
             pianoObserver.disconnect();
           }
         }, { threshold: 0.1 });
         pianoObserver.observe(pianoSection);
 
-        // Fallback: first touch anywhere starts it if section already visible
-        document.addEventListener('touchstart', () => {
-          const rect = pianoSection.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom > 0) startVideo();
-        }, { once: true, passive: true });
+        video.addEventListener('canplay', () => {
+          if (playRequested) doPlay();
+        }, { once: true });
 
         return;
       }
