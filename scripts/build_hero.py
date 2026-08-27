@@ -1,46 +1,48 @@
-"""Compose the desktop hero from the generated piano plate.
+"""Compose the desktop hero from the generated grand-piano plate.
 
-The raw frame has the right elements (floating canopy lid, bare fallboard,
-keyboard) but the bone gap between lid and case is far too shallow to seat the
-headline, and an asymmetric lid prop crosses it. Both are fixed by rebuilding
-the frame: the lid and the body are kept at a single shared scale so the
-instrument stays consistent, and the gap between them is replaced outright with
-clean backdrop at the height the typography actually needs. The prop lived
-entirely inside that discarded band, so it disappears with it.
+The plate is a physically correct front elevation: the lid is hinged to the rim
+and held at ~40 degrees on its prop, so lid, hinge, body, keyboard and support
+read as one instrument. That correctness has a consequence for the layout -- on
+a real grand the body fills the space between the lid and the keyboard, so there
+is no clean backdrop there to seat type in. The headline therefore sits in the
+open backdrop above the instrument, which the raised lid points up into.
 
-Finally the lower body is dissolved into the page background in-pixel, so the
-photograph has no rectangular edge at any size the CSS ever renders it at.
+The model also stamped a garbled imitation of the Steinway fallboard decal. That
+is painted out and replaced with the real wordmark from S&S_logo, laid into the
+fallboard in brass and shaded by the surface underneath it.
 """
+import os
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPM
 
 SRC = "images/backgorund-images/hero-piano-raw.jpg"
+LOGO = "S&S_logo/steinway-and-sons.svg"
 DST = "images/backgorund-images/hero-piano.jpg"
 BONE = np.array([0xF6, 0xF5, 0xF3], dtype=np.float64)
 
-# Landmarks measured off the source plate.
-LID_BOT, BAND_TOP, CASE_TOP = 1593, 1597, 2127
+# Landmarks on the plate.
+PIANO_L, PIANO_R, LID_TIP = 1621, 3824, 319
+DECAL_X0, DECAL_X1, DECAL_Y0, DECAL_Y1 = 2470, 2970, 1655, 1790
 
-# Design frame is 1440x900 (the hero at the reference desktop width); built at 2x.
+# Design frame is 1440x900 (the hero at the reference desktop width), built at 2x.
 SS = 2
 DW, DH = 1440 * SS, 900 * SS
-K = 0.29 * SS                    # source px -> design px
-LID_BOTTOM_Y = 215 * SS          # lid underside: upper edge of the opening
-CASE_TOP_Y = 615 * SS            # case: lower edge of the opening  (400px gap)
-FADE_FROM, FADE_TO = 715 * SS, 840 * SS
+PIANO_W = 460 * SS                 # instrument width in the design frame
+PIANO_TOP = 470 * SS               # where the lid tip lands
+FADE_FROM, FADE_TO = 800 * SS, 855 * SS
 
 
-def flat_field(im, band_top_f, band_bot_f):
-    """Neutralise the warm, uneven studio backdrop onto BONE."""
+def flat_field(im, band_bot_f):
     a = np.asarray(im, dtype=np.float64)
     h, w, _ = a.shape
-    bt, bb = int(h * band_top_f), int(h * band_bot_f)
+    bt, bb = int(h * 0.02), int(h * band_bot_f)
     plate = a.copy()
     plate[bb:, :, :] = a[bb - 1: bb, :, :]
     plate[:bt, :, :] = a[bt: bt + 1, :, :]
-    field = np.asarray(
-        Image.fromarray(plate.astype(np.uint8)).filter(ImageFilter.GaussianBlur(radius=w / 18.0)),
-        dtype=np.float64)
+    field = np.asarray(Image.fromarray(plate.astype(np.uint8))
+                       .filter(ImageFilter.GaussianBlur(radius=w / 18.0)), dtype=np.float64)
     gain = np.clip(BONE[None, None, :] / np.clip(field, 1.0, None), 0.78, 1.34)
     y = np.arange(h, dtype=np.float64)[:, None, None]
     ra, rb = h * (band_bot_f + 0.02), h * (band_bot_f + 0.14)
@@ -49,76 +51,89 @@ def flat_field(im, band_top_f, band_bot_f):
 
 
 def snap_backdrop(im):
-    """Pull every near-backdrop pixel onto exactly BONE.
+    """Force the studio backdrop to exactly BONE.
 
-    Flat-fielding lands the backdrop within a couple of levels of target, but a
-    couple of levels is enough to draw a visible seam where a pasted slab meets
-    the canvas. Snapping only pixels already close to BONE removes the seams
-    while leaving the instrument -- even the ivory naturals, which sit ~60
-    levels darker -- completely untouched.
+    Flat-fielding alone leaves patches once the instrument covers most of the
+    clean rows the field is estimated from. Instead, flood-fill the light region
+    inward from the border: that selects the backdrop only -- it can reach the
+    gap framed by the raised lid, because that gap opens to the edge, but never
+    the ivory naturals, which the case encloses. The mask is then feathered so
+    the instrument's edges keep their anti-aliasing.
     """
     a = np.asarray(im, dtype=np.float64)
-    d = np.sqrt(((a - BONE[None, None, :]) ** 2).sum(axis=2))
-    t = np.clip((34.0 - d) / 22.0, 0.0, 1.0)          # 1 under 12, 0 over 34
-    w = (t * t * (3 - 2 * t))[:, :, None]
-    return Image.fromarray(np.clip(a * (1 - w) + BONE[None, None, :] * w, 0, 255).astype(np.uint8))
+    h, w, _ = a.shape
+    small = im.convert("L").resize((w // 4, h // 4), Image.BILINEAR)
+    light = small.point(lambda v: 255 if v > 196 else 0)
+    ImageDraw.floodfill(light, (0, 0), 128)
+    bg = light.point(lambda v: 255 if v == 128 else 0)
+    bg = bg.resize((w, h), Image.BILINEAR).filter(ImageFilter.GaussianBlur(radius=2.5))
+    m = (np.asarray(bg, dtype=np.float64) / 255.0)[:, :, None]
+    return np.clip(a * (1 - m) + BONE[None, None, :] * m, 0, 255)
 
 
-src = snap_backdrop(flat_field(Image.open(SRC).convert("RGB"), 0.02, 0.40))
-sw, sh = src.size
-scaled = src.resize((round(sw * K), round(sh * K)), Image.LANCZOS)
-ox = (DW - scaled.width) // 2                       # centred; bone gutters crop away
+def clear_decal(a):
+    """Paint out the model's garbled fallboard lettering.
+
+    The fallboard is near-uniform along each row, so interpolating across the
+    stamp from clean lacquer either side of it rebuilds the surface invisibly.
+    """
+    left = a[DECAL_Y0:DECAL_Y1, DECAL_X0 - 40:DECAL_X0 - 10].mean(axis=1)
+    right = a[DECAL_Y0:DECAL_Y1, DECAL_X1 + 10:DECAL_X1 + 40].mean(axis=1)
+    span = DECAL_X1 - DECAL_X0
+    t = (np.arange(span) / (span - 1))[None, :, None]
+    a[DECAL_Y0:DECAL_Y1, DECAL_X0:DECAL_X1] = left[:, None, :] * (1 - t) + right[:, None, :] * t
+    return a
+
+
+def lay_decal(a):
+    """Inlay the real wordmark into the fallboard in brass."""
+    d = svg2rlg(LOGO)
+    w = 470
+    sc = w / d.width
+    d.width *= sc; d.height *= sc; d.scale(sc, sc)
+    tmp = "C:/Users/eriko/AppData/Local/Temp/_logo_plate.png"
+    renderPM.drawToFile(d, tmp, fmt="PNG", bg=0xFFFFFF)
+    logo = np.asarray(Image.open(tmp).convert("L"), dtype=np.float64)
+    alpha = np.clip((255.0 - logo) / 255.0, 0, 1)
+
+    h, wl = alpha.shape
+    x0 = (DECAL_X0 + DECAL_X1) // 2 - wl // 2
+    y0 = 1655
+    patch = a[y0:y0 + h, x0:x0 + wl]
+    # Modulate the brass by the lacquer underneath so the decal picks up the
+    # surface's own falloff instead of reading as a flat sticker.
+    lumin = (0.2126 * patch[:, :, 0] + 0.7152 * patch[:, :, 1] + 0.0722 * patch[:, :, 2])
+    shade = np.clip(0.72 + lumin / 90.0, 0.6, 1.25)[:, :, None]
+    brass = np.array([201, 163, 94], dtype=np.float64)[None, None, :] * shade
+    al = (alpha * 0.93)[:, :, None]
+    a[y0:y0 + h, x0:x0 + wl] = patch * (1 - al) + brass * al
+    return a
+
+
+src = Image.open(SRC).convert("RGB")
+a = snap_backdrop(flat_field(src, 0.10))
+a = lay_decal(clear_decal(a))
+plate = Image.fromarray(a.astype(np.uint8))
+
+K = PIANO_W / (PIANO_R - PIANO_L)
+scaled = plate.resize((round(plate.width * K), round(plate.height * K)), Image.LANCZOS)
 
 canvas = Image.new("RGB", (DW, DH), tuple(BONE.astype(int)))
+ox = DW // 2 - round((PIANO_L + PIANO_R) / 2 * K)
+oy = PIANO_TOP - round(LID_TIP * K)
+canvas.paste(scaled, (ox, oy))
 
-# Lid slab, hung so its underside lands on the top edge of the opening.
-top = scaled.crop((0, 0, scaled.width, round(LID_BOT * K)))
-canvas.paste(top, (ox, LID_BOTTOM_Y - top.height))
-
-# Body slab, seated so the case top lands on the bottom edge of the opening.
-# The fallboard between the case top and the keys is a uniform black expanse;
-# left at full height it makes the lower half far heavier than the headline it
-# is supposed to frame. Squeeze that stretch vertically (a smooth scale, not a
-# cut, so the lit cheek blocks either side keep continuous gradients) to bring
-# the keyboard up under the case and lighten the base of the composition.
-FB_TOP, FB_BOT, FB_KEEP = 2200, 2650, 210
-top_pad = scaled.crop((0, round(CASE_TOP * K), scaled.width, round(FB_TOP * K)))
-squeeze = scaled.crop((0, round(FB_TOP * K), scaled.width, round(FB_BOT * K)))     .resize((scaled.width, round(FB_KEEP * K)), Image.LANCZOS)
-tail = scaled.crop((0, round(FB_BOT * K), scaled.width, scaled.height))
-
-bot = Image.new("RGB", (scaled.width, top_pad.height + squeeze.height + tail.height))
-bot.paste(top_pad, (0, 0))
-bot.paste(squeeze, (0, top_pad.height))
-bot.paste(tail, (0, top_pad.height + squeeze.height))
-# The body is shorter than the dissolve is long, so on its own the photograph
-# would run out mid-fade and leave a hard step where content meets backdrop.
-# Carry the keybed down past the end of the ramp so the dissolve always has
-# something to dissolve, and the image reaches pure backdrop with no edge.
-need = FADE_TO + 24 - CASE_TOP_Y
-if bot.height < need:
-    ext = Image.new("RGB", (bot.width, need))
-    ext.paste(bot, (0, 0))
-    ext.paste(bot.crop((0, bot.height - 1, bot.width, bot.height))
-                 .resize((bot.width, need - bot.height), Image.NEAREST),
-              (0, bot.height))
-    bot = ext
-canvas.paste(bot, (ox, CASE_TOP_Y))
-
-# Dissolve the lower body into the page background (smoothstep, no hard edge).
-a = np.asarray(canvas, dtype=np.float64)
+out = np.asarray(canvas, dtype=np.float64)
 y = np.arange(DH, dtype=np.float64)
 t = np.clip((y - FADE_FROM) / (FADE_TO - FADE_FROM), 0.0, 1.0)
-alpha = (t * t * (3 - 2 * t))[:, None, None]                 # 0 -> 1 eased
-out = a * (1 - alpha) + BONE[None, None, :] * alpha
+alpha = (t * t * (3 - 2 * t))[:, None, None]
+out = out * (1 - alpha) + BONE[None, None, :] * alpha
 out[FADE_TO:] = BONE[None, None, :]
 
-final = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
-final = final.resize((2400, 1500), Image.LANCZOS)
+final = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).resize((2400, 1500), Image.LANCZOS)
 final.save(DST, quality=84, optimize=True, progressive=True, subsampling=0)
-
-import os
-print("wrote %s  %s  %.0f KB" % (DST, final.size, os.path.getsize(DST) / 1024))
-chk = np.asarray(final.convert("RGB"), dtype=float)
-print("corner bone:", chk[20, 20].round().astype(int).tolist(),
-      " opening centre:", chk[int(1500 * 415 / 900), 1200].round().astype(int).tolist(),
-      " bottom row:", chk[-1].mean(axis=0).round().astype(int).tolist())
+print("wrote %s %s  %.0f KB" % (DST, final.size, os.path.getsize(DST) / 1024))
+c = np.asarray(final, dtype=float)
+print("corner", c[20, 20].round().astype(int).tolist(),
+      " above-piano", c[int(1500 * 300 / 900), 1200].round().astype(int).tolist(),
+      " bottom", c[-1].mean(axis=0).round().astype(int).tolist())
