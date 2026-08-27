@@ -57,7 +57,14 @@
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       padding: 0 56px;
-      background: rgba(255, 255, 255, 0.96);
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* Once past the hero the nav needs its own ground again */
+    nav.scrolled {
+      background: rgba(246, 245, 243, 0.94);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--gray-mid);
     }
@@ -125,7 +132,7 @@
     #hero {
       height: 100svh;
       padding-top: 80px;
-      background: url('images/backgorund-images/man-playing.png') center / cover no-repeat;
+      background: url('images/backgorund-images/hero-keys.jpg') center bottom / 100% auto no-repeat, #f6f5f3;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -134,14 +141,15 @@
       overflow: hidden;
     }
 
-    /* Dark overlay + subtle red glow over the hero image */
+    /* Bone wash over the upper hero so the nav and headline always sit on
+       exactly #f6f5f3, plus a whisper of the brand red behind the type. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
-        radial-gradient(ellipse 80% 60% at 50% 60%, rgba(182, 0, 0, 0.1) 0%, transparent 70%);
+        linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
+        radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
       pointer-events: none;
     }
 
@@ -172,7 +180,7 @@
     .hero-title {
       font-size: clamp(56px, 9vw, 120px);
       font-weight: 700;
-      color: #fff;
+      color: var(--text);
       letter-spacing: -0.03em;
       line-height: 0.92;
       margin-bottom: 28px;
@@ -183,11 +191,16 @@
       font-weight: 300;
       letter-spacing: 0.24em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.45);
+      color: var(--muted);
       margin-bottom: 64px;
     }
 
     .hero-scroll {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 5.5vw;
+      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -199,13 +212,13 @@
       font-weight: 700;
       letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.3);
+      color: rgba(255, 255, 255, 0.62);
     }
 
     .scroll-line {
       width: 1px;
       height: 48px;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.22);
       position: relative;
       overflow: hidden;
     }
@@ -217,7 +230,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.85);
       animation: scrollDrop 2s ease-in-out infinite;
     }
 
@@ -811,6 +824,15 @@
     .modal-submit:hover { background: var(--red); }
 
     /* ── Responsive ─────────────────────────────────────── */
+    /* Short viewports: the keys scale with width while the headline centres on
+       height, so on wide-and-short screens the two converge. Trim the type to
+       keep the headline clear of the keyboard. */
+    @media (min-width: 1025px) and (max-height: 820px) {
+      .hero-est { margin-bottom: 18px; }
+      .hero-title { font-size: clamp(48px, 7vw, 88px); }
+      .hero-sub { margin-bottom: 80px; }
+    }
+
     @media (min-width: 769px) and (max-width: 1024px) {
       /* Nav — hamburger replaces full links */
       nav { padding: 0 32px; }
@@ -818,7 +840,11 @@
       .nav-center { position: absolute; left: 50%; transform: translateX(-50%); }
       .hamburger { display: flex; }
       /* Hero — use portrait image and match mobile title proportions */
-      #hero { background-image: url('images/backgorund-images/man-playing-mobile.png'); }
+      #hero {
+        background-image: url('images/backgorund-images/hero-keys-mobile.jpg');
+        background-size: cover;
+        background-position: center bottom;
+      }
       .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
       /* Sections */
       #models { padding: 80px 40px; }
@@ -832,6 +858,11 @@
       #piano-reveal { height: calc(56.25vw + 180px); padding-top: 0; }
       #piano-video { top: 72px; bottom: auto; height: 56.25vw; object-fit: contain; transform: none; }
       .reveal-label { left: 32px; bottom: 36px; }
+      /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
+      .hero-scroll { bottom: 30px; }
+      .hero-scroll span { color: rgba(0, 0, 0, 0.5); }
+      .scroll-line { background: rgba(0, 0, 0, 0.18); }
+      .scroll-line::after { background: rgba(0, 0, 0, 0.55); }
     }
 
     @media (max-width: 900px) {
@@ -866,14 +897,20 @@
       #hero {
         padding-top: 64px;
         height: 100svh;
-        background-image: url('images/backgorund-images/man-playing-mobile.png');
+        background-image: url('images/backgorund-images/hero-keys-mobile.jpg');
         background-size: cover;
-        background-position: center center;
+        background-position: center bottom;
       }
 
       .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
       .hero-sub { font-size: 13px; }
       .hero-est { font-size: 10px; }
+
+      /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
+      .hero-scroll { bottom: 30px; }
+      .hero-scroll span { color: rgba(0, 0, 0, 0.5); }
+      .scroll-line { background: rgba(0, 0, 0, 0.18); }
+      .scroll-line::after { background: rgba(0, 0, 0, 0.55); }
 
       /* Piano reveal — 50px top gap + scaled video + label space */
       #piano-reveal {
@@ -978,10 +1015,10 @@
       <span class="hero-est">Est. 1853 · New York</span>
       <h1 class="hero-title">Steinway<br>&amp; Sons</h1>
       <p class="hero-sub">The Instrument of the Immortals</p>
-      <div class="hero-scroll">
-        <span>Scroll</span>
-        <div class="scroll-line"></div>
-      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
     </div>
   </section>
 
@@ -1280,6 +1317,14 @@
 
     // ── Hamburger menu ────────────────────────────────────
     const hamburger = document.getElementById('hamburger');
+    // ── Nav ground: transparent over the hero, bone once past it ──
+    const navEl = document.querySelector('nav');
+    const setNavGround = () => {
+      navEl.classList.toggle('scrolled', window.scrollY > 24);
+    };
+    setNavGround();
+    window.addEventListener('scroll', setNavGround, { passive: true });
+
     const mobileNav = document.getElementById('mobile-nav');
     const mobileNavLinks = mobileNav.querySelectorAll('.mobile-nav-link');
 
@@ -1376,7 +1421,7 @@
     });
 
     // ── Hero text entrance ────────────────────────────────────
-    gsap.from('.hero-inner > *', {
+    gsap.from('.hero-inner > *, .hero-scroll', {
       opacity: 0,
       y: 32,
       stagger: 0.12,
