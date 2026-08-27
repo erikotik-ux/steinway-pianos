@@ -2,10 +2,14 @@
 
 The plate is a physically correct front elevation: the lid is hinged to the rim
 and held at ~40 degrees on its prop, so lid, hinge, body, keyboard and support
-read as one instrument. That correctness has a consequence for the layout -- on
-a real grand the body fills the space between the lid and the keyboard, so there
-is no clean backdrop there to seat type in. The headline therefore sits in the
-open backdrop above the instrument, which the raised lid points up into.
+read as one instrument. The triangle framed by the lid underside, the prop and
+the rim is the hero's negative space -- the headline is seated inside it.
+
+That triangle has a useful property: its width is 2.2x its depth below the apex,
+in whatever units it is drawn at. So the type fits or does not fit independently
+of how large the piano is rendered; what the piano's scale buys is depth. The
+instrument's own height is what caps that scale here, since the keyboard has to
+stay above the fold.
 
 The model also stamped a garbled imitation of the Steinway fallboard decal. That
 is painted out and replaced with the real wordmark from S&S_logo, laid into the
@@ -29,9 +33,9 @@ DECAL_X0, DECAL_X1, DECAL_Y0, DECAL_Y1 = 2470, 2970, 1655, 1790
 # Design frame is 1440x900 (the hero at the reference desktop width), built at 2x.
 SS = 2
 DW, DH = 1440 * SS, 900 * SS
-PIANO_W = 460 * SS                 # instrument width in the design frame
-PIANO_TOP = 470 * SS               # where the lid tip lands
-FADE_FROM, FADE_TO = 800 * SS, 855 * SS
+PIANO_W = 1128 * SS                # instrument width in the design frame (78% of 1440)
+PIANO_TOP = 58 * SS                # lid tip, clear of the nav links above it
+FADE_FROM, FADE_TO = 868 * SS, 899 * SS
 
 
 def flat_field(im, band_bot_f):
