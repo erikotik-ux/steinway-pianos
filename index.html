@@ -132,7 +132,11 @@
     #hero {
       height: 100svh;
       padding-top: 80px;
-      background: url('images/backgorund-images/hero-keys.jpg') center bottom / 100% auto no-repeat, #f6f5f3;
+      /* Offsets the 80px nav so the headline centres inside the piano's opening
+         rather than in the raw viewport. Mirrors the plate's own 35px offset,
+         so the two stay aligned as `contain` rescales the image. */
+      padding-bottom: 150px;
+      background: url('images/backgorund-images/hero-piano.jpg') center / contain no-repeat, #f6f5f3;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -141,15 +145,14 @@
       overflow: hidden;
     }
 
-    /* Bone wash over the upper hero so the nav and headline always sit on
-       exactly #f6f5f3, plus a whisper of the brand red behind the type. */
+    /* The desktop plate already carries an exact #f6f5f3 backdrop, so no wash is
+       needed there — and one would paint straight over the raised lid. The
+       portrait crops still want it; see the responsive blocks. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
-        radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
+      background: none;
       pointer-events: none;
     }
 
@@ -192,14 +195,14 @@
       letter-spacing: 0.24em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 64px;
+      margin-bottom: 0;
     }
 
     .hero-scroll {
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 5.5vw;
+      bottom: 26px;
       z-index: 2;
       display: flex;
       flex-direction: column;
@@ -212,13 +215,13 @@
       font-weight: 700;
       letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.62);
+      color: rgba(0, 0, 0, 0.5);
     }
 
     .scroll-line {
       width: 1px;
-      height: 48px;
-      background: rgba(255, 255, 255, 0.22);
+      height: 26px;
+      background: rgba(0, 0, 0, 0.18);
       position: relative;
       overflow: hidden;
     }
@@ -230,7 +233,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(0, 0, 0, 0.55);
       animation: scrollDrop 2s ease-in-out infinite;
     }
 
@@ -830,7 +833,7 @@
     @media (min-width: 1025px) and (max-height: 820px) {
       .hero-est { margin-bottom: 18px; }
       .hero-title { font-size: clamp(48px, 7vw, 88px); }
-      .hero-sub { margin-bottom: 80px; }
+      .hero-sub { margin-bottom: 0; }
     }
 
     @media (min-width: 769px) and (max-width: 1024px) {
@@ -844,6 +847,7 @@
         background-image: url('images/backgorund-images/hero-keys-mobile.jpg');
         background-size: cover;
         background-position: center bottom;
+        padding-bottom: 0;
       }
       .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
       /* Sections */
@@ -858,6 +862,13 @@
       #piano-reveal { height: calc(56.25vw + 180px); padding-top: 0; }
       #piano-video { top: 72px; bottom: auto; height: 56.25vw; object-fit: contain; transform: none; }
       .reveal-label { left: 32px; bottom: 36px; }
+      #hero::before {
+        background:
+          linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
+          radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
+      }
+      .hero-sub { margin-bottom: 64px; }
+      .scroll-line { height: 48px; }
       /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
       .hero-scroll { bottom: 30px; }
       .hero-scroll span { color: rgba(0, 0, 0, 0.5); }
@@ -900,12 +911,20 @@
         background-image: url('images/backgorund-images/hero-keys-mobile.jpg');
         background-size: cover;
         background-position: center bottom;
+        padding-bottom: 0;
       }
 
       .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
       .hero-sub { font-size: 13px; }
       .hero-est { font-size: 10px; }
 
+      #hero::before {
+        background:
+          linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
+          radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
+      }
+      .hero-sub { margin-bottom: 64px; }
+      .scroll-line { height: 48px; }
       /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
       .hero-scroll { bottom: 30px; }
       .hero-scroll span { color: rgba(0, 0, 0, 0.5); }
