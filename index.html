@@ -132,7 +132,9 @@
     #hero {
       height: 100svh;
       padding-top: 80px;
-      background: url('images/backgorund-images/hero-piano.jpg') center / auto 100% no-repeat, #f6f5f3;
+      /* Full-bleed photographic layer: `cover` keeps it edge to edge at every
+         viewport, letting the oversized piano crop through the sides. */
+      background: url('images/backgorund-images/hero-piano.jpg') center / cover no-repeat, #f6f5f3;
       display: flex;
       align-items: center;
       justify-content: center;
