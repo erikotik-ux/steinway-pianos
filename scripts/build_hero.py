@@ -24,16 +24,16 @@ SRC = "images/backgorund-images/hero-piano-raw.jpg"
 DST = "images/backgorund-images/hero-piano.jpg"
 BONE = np.array([0xF6, 0xF5, 0xF3], dtype=np.float64)   # == the piano-video section
 
-RIM_Y = 1700                       # top of the case; above it, only lid and backdrop
-KB_LOW = 2711                      # the keyboard's lowest point on the plate
+RIM_Y = 1450                       # top of the case; above it, only lid and backdrop
+KB_LOW = 2706                      # the keyboard's lowest point on the plate
 
 # Design frame is 16:9; built at 2x and delivered at 3840x2160.
 SS = 2
 DW, DH = 1600 * SS, 900 * SS
 KB_BOTTOM = 800 * SS               # where the keyboard's lowest point lands
-PIANO_TOP = -150 * SS              # design y of the plate's top row
-PIANO_DX = -33 * SS                # slide so the lid clears the nav's left links
-FADE_FROM, FADE_TO = 815 * SS, 892 * SS   # starts below the keys, never over them
+PIANO_TOP = -80 * SS               # design y of the plate's top row; the lid bleeds off
+PIANO_DX = -60 * SS                # slide so the lid clears the nav's left links
+FADE_FROM, FADE_TO = 808 * SS, 848 * SS   # below the keys, above the scroll cue
 
 
 # NOTE: every generation run so far -- nineteen, across two models -- was asked
