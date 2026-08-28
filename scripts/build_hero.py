@@ -36,11 +36,11 @@ PIANO_DX = -33 * SS                # slide so the lid clears the nav's left link
 FADE_FROM, FADE_TO = 815 * SS, 892 * SS   # starts below the keys, never over them
 
 
-# NOTE: fifteen generations were run asking for the felt behind the keys to be
-# black. Every one came back with the red strip -- it is a real feature of the
-# instrument, not a model artefact. An earlier revision of this script
-# desaturated it here; that was a retouch of the photograph and has been
-# removed. The plate now goes out exactly as generated.
+# NOTE: every generation run so far -- nineteen, across two models -- was asked
+# for black felt behind the keys, and every one came back with the red strip.  It
+# is a real feature of the instrument, not a model artefact.  An earlier revision
+# of this script desaturated it here; that was a retouch of the photograph and
+# has been removed.  The plate now goes out exactly as generated.
 
 
 def snap_backdrop(a):
