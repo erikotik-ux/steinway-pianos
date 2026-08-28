@@ -17,17 +17,20 @@ OFF = {"C": -0.097, "D": +0.097, "F": -0.146, "G": 0.0, "A": +0.145}
 NOTES = "ABCDEFG"
 
 
-def draw(width, top, sharp_bottom, bottom, felt_h, shade=None, ss=3):
+def draw(width, top, sharp_bottom, bottom, felt_h, shade=None, ss=3, dark_h=0):
     """Return an RGB image of the keyboard, `width` px wide."""
-    h = bottom - top + felt_h
+    h = bottom - top + felt_h + dark_h
     W, H = width * ss, h * ss
     img = Image.new("RGB", (W, H), (12, 11, 11))
     d = ImageDraw.Draw(img)
     w = W / 52.0
-    felt = felt_h * ss
+    dark = dark_h * ss
+    felt = dark + felt_h * ss
     kt, sb, kb = felt, felt + (sharp_bottom - top) * ss, felt + (bottom - top) * ss
 
-    d.rectangle([0, 0, W, felt], fill=(58, 12, 10))                    # felt
+    # lacquer above the felt, so the replacement covers the plate's own key tops
+    d.rectangle([0, 0, W, dark], fill=(26, 23, 18))
+    d.rectangle([0, dark, W, felt], fill=(58, 12, 10))                 # felt
     d.rectangle([0, kt, W, kb], fill=(250, 244, 226))                  # naturals
 
     for i in range(1, 52):                                             # separations
@@ -53,7 +56,7 @@ def draw(width, top, sharp_bottom, bottom, felt_h, shade=None, ss=3):
 
     # Naturals sit in shadow where the sharps enclose them, opening out below.
     y = np.arange(h, dtype=np.float64)[:, None, None]
-    t = np.clip((y - felt_h) / max(1, (sharp_bottom - top) + 26), 0, 1)
+    t = np.clip((y - felt_h - dark_h) / max(1, (sharp_bottom - top) + 26), 0, 1)
     lit = 0.58 + 0.42 * (t * t * (3 - 2 * t))
     natural = (a.mean(axis=2) > 150)[:, :, None]
     # Warm the shadow slightly rather than just darkening it, so the enclosed
@@ -64,4 +67,13 @@ def draw(width, top, sharp_bottom, bottom, felt_h, shade=None, ss=3):
 
     if shade is not None:                    # inherit the scene's lateral falloff
         a *= shade[None, :, None]
-    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+
+    img = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).convert("RGBA")
+    if dark_h:
+        # Fade the lacquer band in from nothing so the patch has no top edge
+        # against the fallboard it is covering.
+        alpha = np.full((h, width), 255, np.uint8)
+        ramp = np.clip(np.arange(dark_h) / max(1, dark_h * 0.7), 0, 1)
+        alpha[:dark_h] = (ramp[:, None] * 255).astype(np.uint8)
+        img.putalpha(Image.fromarray(alpha))
+    return img
