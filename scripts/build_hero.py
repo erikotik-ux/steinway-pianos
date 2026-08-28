@@ -36,25 +36,11 @@ PIANO_DX = -33 * SS                # slide so the lid clears the nav's left link
 FADE_FROM, FADE_TO = 815 * SS, 892 * SS   # starts below the keys, never over them
 
 
-# Nine generations were run asking for the felt behind the keys to be black;
-# every one came back with the red strip, so it is neutralised here instead.
-# This is a COLOUR-ONLY correction: it desaturates red-dominant pixels toward a
-# neutral charcoal derived from their own green and blue channels, so shading
-# and specular detail survive. No geometry is touched and no key is redrawn.
-# Set NEUTRALISE_RED = False to ship the generated file completely untouched.
-NEUTRALISE_RED = True
-
-
-def neutralise_red_felt(a):
-    if not NEUTRALISE_RED:
-        return a
-    r, g, b = a[:, :, 0], a[:, :, 1], a[:, :, 2]
-    red = (r - b > 45) & (r - g > 35) & (r > 55)
-    soft = np.asarray(Image.fromarray((red * 255).astype(np.uint8))
-                      .filter(ImageFilter.GaussianBlur(1.2)), np.float64) / 255.0
-    v = 0.62 * g + 0.38 * b                      # the felt's own tone, minus the red
-    neutral = np.stack([v * 1.04, v * 1.00, v * 0.96], axis=2)
-    return a * (1 - soft[:, :, None]) + neutral * soft[:, :, None]
+# NOTE: fifteen generations were run asking for the felt behind the keys to be
+# black. Every one came back with the red strip -- it is a real feature of the
+# instrument, not a model artefact. An earlier revision of this script
+# desaturated it here; that was a retouch of the photograph and has been
+# removed. The plate now goes out exactly as generated.
 
 
 def snap_backdrop(a):
@@ -89,7 +75,7 @@ def snap_backdrop(a):
 
 
 a = np.asarray(Image.open(SRC).convert("RGB"), dtype=np.float64)
-im = Image.fromarray(np.clip(snap_backdrop(neutralise_red_felt(a)), 0, 255).astype(np.uint8))
+im = Image.fromarray(np.clip(snap_backdrop(a), 0, 255).astype(np.uint8))
 
 K = (KB_BOTTOM - PIANO_TOP) / KB_LOW
 scaled = im.resize((round(im.width * K), round(im.height * K)), Image.LANCZOS)
