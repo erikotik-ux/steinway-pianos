@@ -35,21 +35,22 @@ DST = "images/backgorund-images/hero-piano.jpg"
 BONE = np.array([0xF6, 0xF5, 0xF3], dtype=np.float64)
 
 # Landmarks measured on the plate.
-PIANO_L, PIANO_R = 165, 5181
-LID_TIP = 5
-RIM_Y = 1560
-KB_X0, KB_X1 = 578, 4805          # run of naturals
-KB_FELT, KB_TOP, KB_SHARP, KB_BOT = 2606, 2624, 2740, 2844
-KB_END = 2870                     # below the naturals, where the slip begins
-SQ_TOP, SQ_BOT, SQ_KEEP = 1880, 2570, 120   # fallboard squeeze
-HINGE_Y = 1400                    # below this the lid's real hinge starts
+PIANO_L, PIANO_R = 0, 5376        # the instrument fills the plate edge to edge
+LID_TIP = 355
+RIM_Y = 1540
+KB_X0, KB_X1 = 465, 4994          # run of naturals
+KB_FELT, KB_TOP, KB_SHARP, KB_BOT = 2478, 2505, 2660, 2782
+KB_END = 2800                     # below the naturals, where the slip begins
+SQ_TOP, SQ_BOT, SQ_KEEP = 1750, 2450, 200   # fallboard squeeze
+HINGE_Y = 1450                    # below this the lid's real hinge starts
 
 # Design frame is 1440x900 (the hero at the reference desktop width), built at 2x.
 SS = 2
-DW, DH = 1440 * SS, 900 * SS
-PIANO_TOP = 68 * SS                # lid tip, clear of the nav links at every viewport
-KB_BOTTOM = 888 * SS              # keyboard floor
-FADE_FROM, FADE_TO = 878 * SS, 899 * SS
+DW, DH = 1600 * SS, 900 * SS      # 16:9 design frame
+PIANO_TOP = -304 * SS               # lid tip runs off the top, as the reference does
+KB_BOTTOM = 800 * SS              # keyboard floor, leaving room beneath it
+PIANO_DX = -524 * SS              # slide the instrument so the void centres on the frame
+FADE_FROM, FADE_TO = 812 * SS, 892 * SS   # starts below the keys, never over them
 
 
 def remove_duplicate_lid(a):
@@ -136,7 +137,13 @@ def snap_backdrop(a):
     im = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
     small = im.convert("L").resize((w // 4, h // 4), Image.BILINEAR)
     light = small.point(lambda v: 255 if v > 196 else 0)
-    ImageDraw.floodfill(light, (0, 0), 128)
+    sw, sh = light.size
+    # Seed from every edge, not just one corner: the instrument reaches both
+    # sides here, so backdrop pockets beside it are not all reachable from (0,0).
+    for sx, sy in [(0, 0), (sw - 1, 0), (0, sh - 1), (sw - 1, sh - 1),
+                   (sw // 2, 0), (0, sh // 2), (sw - 1, sh // 2), (sw // 2, sh - 1)]:
+        if light.getpixel((sx, sy)) == 255:
+            ImageDraw.floodfill(light, (sx, sy), 128)
     below = np.asarray(light.point(lambda v: 255 if v == 128 else 0)
                        .resize((w, h), Image.NEAREST), np.uint8) > 0
     m[RIM_Y:] = below[RIM_Y:]
@@ -174,7 +181,7 @@ def squeeze_fallboard(a):
 def lay_decal(a, fb_top, fb_bot):
     """Inlay the real wordmark into the fallboard in brass."""
     d = svg2rlg(LOGO)
-    w = 460
+    w = 135
     sc = w / d.width
     d.width *= sc; d.height *= sc; d.scale(sc, sc)
     tmp = os.path.join(os.environ.get("TEMP", "."), "_logo_plate.png")
@@ -206,7 +213,7 @@ K = (KB_BOTTOM - PIANO_TOP) / (kb_bottom_src - LID_TIP)
 plate = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
 scaled = plate.resize((round(plate.width * K), round(plate.height * K)), Image.LANCZOS)
 canvas = Image.new("RGB", (DW, DH), tuple(BONE.astype(int)))
-ox = DW // 2 - round((PIANO_L + PIANO_R) / 2 * K)
+ox = DW // 2 - round((PIANO_L + PIANO_R) / 2 * K) + PIANO_DX
 oy = PIANO_TOP - round(LID_TIP * K)
 canvas.paste(scaled, (ox, oy))
 
@@ -217,7 +224,7 @@ al = (t * t * (3 - 2 * t))[:, None, None]
 out = out * (1 - al) + BONE[None, None, :] * al
 out[FADE_TO:] = BONE[None, None, :]
 
-final = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).resize((2400, 1500), Image.LANCZOS)
+final = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).resize((3840, 2160), Image.LANCZOS)
 final.save(DST, quality=84, optimize=True, progressive=True, subsampling=0)
 print("wrote %s %s  %.0f KB   piano %.0f design px (%.0f%% of 1440)"
       % (DST, final.size, os.path.getsize(DST) / 1024,
