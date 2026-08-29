@@ -218,23 +218,23 @@
        alone. This ramp reaches a full 1 at the very bottom rather than
        stopping short: anything less leaves the hero's last row a little darker
        than the section beneath it, which reads as a line across the join. The
-       many stops ease it so the dissolve does not band, and 150px keeps it
-       clear of the hands, which start 190px above the bottom edge. */
+       many stops ease it so the dissolve does not band, at 100px on desktop.
+       The hands start 190px above the bottom edge, so it stays well clear. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
       background: linear-gradient(to top,
         rgba(246, 245, 243, 1)    0,
-        rgba(246, 245, 243, 1)    11px,
-        rgba(246, 245, 243, 0.95) 26px,
-        rgba(246, 245, 243, 0.84) 46px,
-        rgba(246, 245, 243, 0.66) 68px,
-        rgba(246, 245, 243, 0.45) 89px,
-        rgba(246, 245, 243, 0.26) 108px,
-        rgba(246, 245, 243, 0.12) 125px,
-        rgba(246, 245, 243, 0.04) 137px,
-        rgba(246, 245, 243, 0)    150px);
+        rgba(246, 245, 243, 1)    7px,
+        rgba(246, 245, 243, 0.95) 17px,
+        rgba(246, 245, 243, 0.84) 31px,
+        rgba(246, 245, 243, 0.66) 45px,
+        rgba(246, 245, 243, 0.45) 59px,
+        rgba(246, 245, 243, 0.26) 72px,
+        rgba(246, 245, 243, 0.12) 83px,
+        rgba(246, 245, 243, 0.04) 91px,
+        rgba(246, 245, 243, 0)    100px);
       pointer-events: none;
     }
 
