@@ -120,6 +120,31 @@
       .modal { padding: 48px 24px 36px; }
       .modal-title { font-size: 22px; }
     }
+  
+    /* Keyboard focus was invisible across the site. Scoped to :focus-visible so
+       it shows for keyboard users without ringing every mouse click. */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 2px solid #b60000;
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -143,7 +168,7 @@
       </div>
     </div>
     <div class="hero-image">
-      <img src="images/models/model-d-high-res.png" alt="Steinway Model D Concert Grand">
+      <img src="images/models/model-d-high-res.webp" alt="Steinway Model D Concert Grand">
     </div>
   </section>
 
@@ -185,10 +210,10 @@
       <p class="modal-eyebrow">Get in Touch</p>
       <h2 class="modal-title" id="modal-title">Request Information</h2>
       <form class="modal-form" id="modal-form" novalidate>
-        <input type="text" name="name" placeholder="Full Name" required autocomplete="name">
-        <input type="email" name="email" placeholder="Email Address" required autocomplete="email">
-        <input type="tel" name="phone" placeholder="Phone Number (optional)" autocomplete="tel">
-        <textarea name="message" placeholder="Tell us about your interest — model, occasion, or any questions.">I'm interested in the Model D Concert Grand.</textarea>
+        <input type="text" name="name" placeholder="Full Name" aria-label="Full name" required autocomplete="name">
+        <input type="email" name="email" placeholder="Email Address" aria-label="Email address" required autocomplete="email">
+        <input type="tel" name="phone" placeholder="Phone Number (optional)" aria-label="Phone number (optional)" autocomplete="tel">
+        <textarea name="message" aria-label="Your message" placeholder="Tell us about your interest — model, occasion, or any questions.">I'm interested in the Model D Concert Grand.</textarea>
         <button type="submit" class="modal-submit">Send Request</button>
       </form>
     </div>
@@ -230,6 +255,9 @@
         });
         if (error) throw error;
       } catch (e) {
+        /* Swallowing this made a dead backend look like a mystery: log it so
+           the real cause is one console glance away. */
+        console.error('Lead submission failed:', e);
         btn.textContent = 'Something went wrong — try again'; btn.style.background = '#a00'; btn.disabled = false;
         setTimeout(() => { btn.textContent = 'Send Request'; btn.style.background = ''; }, 3000);
         return;

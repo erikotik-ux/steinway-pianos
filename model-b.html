@@ -60,6 +60,31 @@
     @media (min-width: 901px) and (max-width: 1024px) { nav { padding: 0 32px; } .model-hero { padding: 56px 32px; } .divider { margin: 0 32px; } .model-body { padding: 72px 32px; gap: 48px; grid-template-columns: 1fr 300px; } footer { padding: 24px 32px; } }
     @media (max-width: 900px) { .model-hero { flex-direction: column; padding: 0 0 60px; min-height: auto; } .hero-text { width: 100%; padding: 0 32px; } .hero-image { position: relative; width: 100%; height: 50vh; overflow: hidden; order: -1; } .hero-image img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; max-width: none; transform: translate(-30px, -20px) scale(1.42); transform-origin: 50% 45%; } .hero-image::after { display: block; background: linear-gradient(to bottom, transparent 75%, var(--bg) 100%); } .model-body { grid-template-columns: 1fr; gap: 48px; padding: 80px 32px; } .model-specs { position: static; } }
     @media (max-width: 600px) { nav { padding: 0 20px; } .model-hero { padding: 0 0 48px; } .hero-title { font-size: clamp(40px, 11vw, 64px); } .model-body { padding: 60px 20px; } .divider { margin: 0 20px; } footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; } .modal { padding: 48px 24px 36px; } .modal-title { font-size: 22px; } }
+  
+    /* Keyboard focus was invisible across the site. Scoped to :focus-visible so
+       it shows for keyboard users without ringing every mouse click. */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 2px solid #b60000;
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -79,7 +104,7 @@
       </div>
     </div>
     <div class="hero-image">
-      <img src="images/models/model-b-high-res.png" alt="Steinway Model B Classic Grand">
+      <img src="images/models/model-b-high-res.webp" alt="Steinway Model B Classic Grand">
     </div>
   </section>
   <div class="divider"></div>
@@ -114,10 +139,10 @@
       <p class="modal-eyebrow">Get in Touch</p>
       <h2 class="modal-title" id="modal-title">Request Information</h2>
       <form class="modal-form" id="modal-form" novalidate>
-        <input type="text" name="name" placeholder="Full Name" required autocomplete="name">
-        <input type="email" name="email" placeholder="Email Address" required autocomplete="email">
-        <input type="tel" name="phone" placeholder="Phone Number (optional)" autocomplete="tel">
-        <textarea name="message" placeholder="Tell us about your interest — model, occasion, or any questions.">I'm interested in the Model B Classic Grand.</textarea>
+        <input type="text" name="name" placeholder="Full Name" aria-label="Full name" required autocomplete="name">
+        <input type="email" name="email" placeholder="Email Address" aria-label="Email address" required autocomplete="email">
+        <input type="tel" name="phone" placeholder="Phone Number (optional)" aria-label="Phone number (optional)" autocomplete="tel">
+        <textarea name="message" aria-label="Your message" placeholder="Tell us about your interest — model, occasion, or any questions.">I'm interested in the Model B Classic Grand.</textarea>
         <button type="submit" class="modal-submit">Send Request</button>
       </form>
     </div>
@@ -144,6 +169,9 @@
         const { error } = await supabaseClient.from('leads').insert({ name: modalForm.name.value.trim(), email: modalForm.email.value.trim(), phone: modalForm.phone.value.trim() || null, message: modalForm.message.value.trim() || null });
         if (error) throw error;
       } catch (e) {
+        /* Swallowing this made a dead backend look like a mystery: log it so
+           the real cause is one console glance away. */
+        console.error('Lead submission failed:', e);
         btn.textContent = 'Something went wrong — try again'; btn.style.background = '#a00'; btn.disabled = false;
         setTimeout(() => { btn.textContent = 'Send Request'; btn.style.background = ''; }, 3000); return;
       }

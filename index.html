@@ -1620,6 +1620,9 @@
         });
         if (error) throw error;
       } catch (e) {
+        /* Swallowing this made a dead backend look like a mystery: log it so
+           the real cause is one console glance away. */
+        console.error('Lead submission failed:', e);
         btn.textContent = 'Something went wrong — try again';
         btn.style.background = '#a00';
         btn.disabled = false;

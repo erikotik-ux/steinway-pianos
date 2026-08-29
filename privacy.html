@@ -134,6 +134,31 @@
       main { padding: 120px 24px 80px; }
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
     }
+  
+    /* Keyboard focus was invisible across the site. Scoped to :focus-visible so
+       it shows for keyboard users without ringing every mouse click. */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 2px solid #b60000;
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>

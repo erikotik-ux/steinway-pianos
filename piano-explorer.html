@@ -110,7 +110,32 @@ html,body{width:100%;background:var(--bg);font-family:'Georgia',serif;color:var(
   0%,100%{opacity:0.25;transform:scaleY(0.75)}
   50%{opacity:1;transform:scaleY(1)}
 }
-</style>
+
+    /* Keyboard focus was invisible across the site. Scoped to :focus-visible so
+       it shows for keyboard users without ringing every mouse click. */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 2px solid #b60000;
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
 </head>
 <body>
 <canvas id="c"></canvas>
@@ -375,6 +400,15 @@ C('legFL','Front Left Leg','Turned ebony leg with brass ferrule and locking cast
 C('legR','Rear Leg','Rear center leg with heavy-duty locking caster',
   legG, M.ebony, [0,-1.25,-1.25],[0,0,0], [0,-3.6,-5.2],[0,0,0.1], 0.93);
 
+// ─── BUILD SCENE GRAPH ────────────────────────────────────────────────────────
+// Declared before buildStringDetail() below, which adds to it. It used to sit
+// after that IIFE, so the immediate call hit the const's temporal dead zone and
+// threw "Cannot access 'pianoGroup' before initialization" -- aborting the
+// module, which meant the scene graph, the components and the render loop after
+// it never ran at all and the explorer rendered nothing.
+const pianoGroup = new THREE.Group();
+scene.add(pianoGroup);
+
 // ─── FINE STRING DETAIL (instanced cylinders, fan across Z axis) ─────────────
 // These are decorative — they live inside the cabinet and are revealed as the
 // plate and lid fly away, before the string-slab components animate out.
@@ -406,9 +440,6 @@ C('legR','Rear Leg','Rear center leg with heavy-duty locking caster',
   pianoGroup.add(bm);
 })();
 
-// ─── BUILD SCENE GRAPH ────────────────────────────────────────────────────────
-const pianoGroup = new THREE.Group();
-scene.add(pianoGroup);
 
 const components = defs.map(d => {
   const mesh = new THREE.Mesh(d.geo, d.mat);
@@ -523,43 +554,68 @@ document.querySelectorAll('.model-btn').forEach(btn => {
 });
 
 // ─── SCROLL TRIGGER ──────────────────────────────────────────────────────────
-const { gsap, ScrollTrigger } = window;
-gsap.registerPlugin(ScrollTrigger);
+/* GSAP drives the dismantle progress from scroll position, and it comes from a
+   CDN, so it can fail. registerPlugin used to run unguarded here, which meant a
+   failure threw before the Three.js render loop below ever started and the page
+   was a frozen canvas. The progress handler is shared now, and a plain scroll
+   listener stands in when ScrollTrigger is unavailable, so the explorer still
+   works without it. */
+const HAS_ST = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
 
 let hasScrolled = false;
+let lastProgress = 0;
 
-ScrollTrigger.create({
-  trigger: '#scroller',
-  start: 'top top',
-  end: 'bottom bottom',
-  scrub: true,
-  onUpdate(self) {
-    targetT = self.progress;
+function applyProgress(progress, direction) {
+  targetT = progress;
 
-    if (!hasScrolled && self.progress > 0.01) {
-      hasScrolled = true;
-      scrollHint.classList.add('gone');
-    }
-
-    progLbl.textContent = self.direction === 1 ? 'Dismantling' : 'Assembling';
-
-    if (self.progress < 0.02) {
-      progLbl.textContent = 'Assembled';
-      anatEl.classList.remove('show');
-      btnA.classList.add('on');
-      btnD.classList.remove('on');
-    } else if (self.progress > 0.97) {
-      progLbl.textContent = 'Dismantled';
-      anatEl.classList.add('show');
-      btnD.classList.add('on');
-      btnA.classList.remove('on');
-    } else {
-      anatEl.classList.toggle('show', self.progress > 0.85);
-      btnA.classList.remove('on');
-      btnD.classList.remove('on');
-    }
+  if (!hasScrolled && progress > 0.01) {
+    hasScrolled = true;
+    scrollHint.classList.add('gone');
   }
-});
+
+  progLbl.textContent = direction === 1 ? 'Dismantling' : 'Assembling';
+
+  if (progress < 0.02) {
+    progLbl.textContent = 'Assembled';
+    anatEl.classList.remove('show');
+    btnA.classList.add('on');
+    btnD.classList.remove('on');
+  } else if (progress > 0.97) {
+    progLbl.textContent = 'Dismantled';
+    anatEl.classList.add('show');
+    btnD.classList.add('on');
+    btnA.classList.remove('on');
+  } else {
+    anatEl.classList.toggle('show', progress > 0.85);
+    btnA.classList.remove('on');
+    btnD.classList.remove('on');
+  }
+}
+
+if (HAS_ST) {
+  const { gsap, ScrollTrigger } = window;
+  gsap.registerPlugin(ScrollTrigger);
+
+  ScrollTrigger.create({
+    trigger: '#scroller',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: true,
+    onUpdate(self) {
+      applyProgress(self.progress, self.direction);
+    }
+  });
+} else {
+  const scroller = document.querySelector('#scroller');
+  const onScroll = () => {
+    const span = (scroller ? scroller.offsetHeight : document.body.scrollHeight) - window.innerHeight;
+    const p = span > 0 ? Math.max(0, Math.min(1, window.scrollY / span)) : 0;
+    applyProgress(p, p >= lastProgress ? 1 : -1);
+    lastProgress = p;
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
 
 // ─── RENDER LOOP ─────────────────────────────────────────────────────────────
 const clock = new THREE.Clock();

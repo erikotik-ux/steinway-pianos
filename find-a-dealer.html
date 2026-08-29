@@ -20,7 +20,7 @@
     .page-hero {
       margin-top: 72px;
       height: calc(60vh - 72px);
-      background-image: url('images/backgorund-images/stage.png');
+      background-image: url('images/backgorund-images/stage.webp');
       background-size: cover;
       background-position: center 55%;
       position: relative;
@@ -92,6 +92,31 @@
       footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; }
       .modal { padding: 48px 24px 36px; }
       .modal-title { font-size: 22px; }
+    }
+  
+    /* Keyboard focus was invisible across the site. Scoped to :focus-visible so
+       it shows for keyboard users without ringing every mouse click. */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 2px solid #b60000;
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
@@ -183,10 +208,10 @@
       <p class="modal-eyebrow">Get in Touch</p>
       <h2 class="modal-title" id="modal-title">Request Information</h2>
       <form class="modal-form" id="modal-form" novalidate>
-        <input type="text" name="name" placeholder="Full Name" required autocomplete="name">
-        <input type="email" name="email" placeholder="Email Address" required autocomplete="email">
-        <input type="tel" name="phone" placeholder="Phone Number (optional)" autocomplete="tel">
-        <textarea name="message" placeholder="Tell us about your interest — model, location, or any questions.">I'd like to find an authorized Steinway dealer near me.</textarea>
+        <input type="text" name="name" placeholder="Full Name" aria-label="Full name" required autocomplete="name">
+        <input type="email" name="email" placeholder="Email Address" aria-label="Email address" required autocomplete="email">
+        <input type="tel" name="phone" placeholder="Phone Number (optional)" aria-label="Phone number (optional)" autocomplete="tel">
+        <textarea name="message" aria-label="Your message" placeholder="Tell us about your interest — model, location, or any questions.">I'd like to find an authorized Steinway dealer near me.</textarea>
         <button type="submit" class="modal-submit">Send Request</button>
       </form>
     </div>
@@ -214,6 +239,9 @@
         const { error } = await supabaseClient.from('leads').insert({ name: modalForm.name.value.trim(), email: modalForm.email.value.trim(), phone: modalForm.phone.value.trim() || null, message: modalForm.message.value.trim() || null });
         if (error) throw error;
       } catch (e) {
+        /* Swallowing this made a dead backend look like a mystery: log it so
+           the real cause is one console glance away. */
+        console.error('Lead submission failed:', e);
         btn.textContent = 'Something went wrong — try again'; btn.style.background = '#a00'; btn.disabled = false;
         setTimeout(() => { btn.textContent = 'Send Request'; btn.style.background = ''; }, 3000); return;
       }
