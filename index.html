@@ -212,29 +212,35 @@
        needed there — and one would paint straight over the raised lid. The
        portrait crops still want it; see the responsive blocks. */
     /* The pianist fills the whole left edge of this frame, so the nav's dark
-       /* Only the foot is dissolved now. The top scrim was there to keep the
-       nav's dark links off the pianist's black jacket; the nav carries its own
-       frosted bar for that instead, so the photography at the top is left
-       alone. This ramp reaches a full 1 at the very bottom rather than
-       stopping short: anything less leaves the hero's last row a little darker
-       than the section beneath it, which reads as a line across the join. The
-       many stops ease it so the dissolve does not band, at 100px on desktop.
-       The hands start 190px above the bottom edge, so it stays well clear. */
+       /* Only the foot is dissolved. The top scrim was there to keep the nav's
+       dark links off the pianist's black jacket; the nav carries its own
+       frosted bar for that now, so the photograph runs clean to the top edge.
+
+       This ramp is measured in percentages, so it stays the bottom tenth of the
+       hero at any viewport height rather than covering more of a short one. The
+       curve is weighted hard to the bottom: still barely there at 7% up, past
+       half only in the last 4%. That keeps the keyboard and the hands crisp --
+       the key detail starts 21% up and the hands 21% up too, so neither is
+       touched at all -- and dissolves only the case and lap along the very
+       bottom edge. It reaches a full 1 at the edge itself, because anything
+       less leaves the last row darker than the section below and that reads as
+       a line across the join. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
       background: linear-gradient(to top,
         rgba(246, 245, 243, 1)    0,
-        rgba(246, 245, 243, 1)    7px,
-        rgba(246, 245, 243, 0.95) 17px,
-        rgba(246, 245, 243, 0.84) 31px,
-        rgba(246, 245, 243, 0.66) 45px,
-        rgba(246, 245, 243, 0.45) 59px,
-        rgba(246, 245, 243, 0.26) 72px,
-        rgba(246, 245, 243, 0.12) 83px,
-        rgba(246, 245, 243, 0.04) 91px,
-        rgba(246, 245, 243, 0)    100px);
+        rgba(246, 245, 243, 1)    0.6%,
+        rgba(246, 245, 243, 0.94) 1.5%,
+        rgba(246, 245, 243, 0.82) 2.5%,
+        rgba(246, 245, 243, 0.66) 3.5%,
+        rgba(246, 245, 243, 0.50) 4.5%,
+        rgba(246, 245, 243, 0.35) 5.5%,
+        rgba(246, 245, 243, 0.22) 6.5%,
+        rgba(246, 245, 243, 0.12) 7.5%,
+        rgba(246, 245, 243, 0.05) 8.5%,
+        rgba(246, 245, 243, 0)    10%);
       pointer-events: none;
     }
 
