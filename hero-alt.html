@@ -148,11 +148,20 @@
     /* The desktop plate already carries an exact #f6f5f3 backdrop, so no wash is
        needed there — and one would paint straight over the raised lid. The
        portrait crops still want it; see the responsive blocks. */
+    /* The pianist fills the whole left edge of this frame, so the nav's dark
+       links would otherwise sit on black cloth and disappear. A scrim across
+       the very top lifts that band back to the page colour and falls away to
+       nothing well before the headline, leaving the photograph itself
+       untouched below it. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: none;
+      background: linear-gradient(to bottom,
+        rgba(246, 245, 243, 0.94) 0,
+        rgba(246, 245, 243, 0.90) 62px,
+        rgba(246, 245, 243, 0.45) 110px,
+        rgba(246, 245, 243, 0) 168px);
       pointer-events: none;
     }
 
@@ -172,8 +181,8 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 61%;
-      transform: translateX(-13.9vh);
+      bottom: 58.8%;
+      transform: translateX(-8vh);
       z-index: 1;
       display: flex;
       flex-direction: column;
@@ -197,7 +206,7 @@
     }
 
     .hero-title {
-      font-size: clamp(48px, 10.2vh, 118px);
+      font-size: clamp(46px, 9.55vh, 110px);
       font-weight: 700;
       color: var(--text);
       letter-spacing: -0.03em;
