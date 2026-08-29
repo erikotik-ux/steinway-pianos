@@ -160,7 +160,8 @@
        bottom rather than stopping short: anything less leaves the hero's last
        row a little darker than the section beneath it, which reads as a line
        across the join. The many stops are there to ease the ramp so the
-       dissolve itself does not band. */
+       dissolve itself does not band. It stops at 200px because the hands sit
+       190px and higher above the bottom edge, and a longer ramp washed them. */
     #hero::before {
       content: '';
       position: absolute;
@@ -168,15 +169,15 @@
       background:
         linear-gradient(to top,
           rgba(246, 245, 243, 1)    0,
-          rgba(246, 245, 243, 1)    18px,
-          rgba(246, 245, 243, 0.95) 46px,
-          rgba(246, 245, 243, 0.84) 80px,
-          rgba(246, 245, 243, 0.66) 118px,
-          rgba(246, 245, 243, 0.45) 156px,
-          rgba(246, 245, 243, 0.26) 190px,
-          rgba(246, 245, 243, 0.12) 218px,
-          rgba(246, 245, 243, 0.04) 240px,
-          rgba(246, 245, 243, 0)    264px),
+          rgba(246, 245, 243, 1)    14px,
+          rgba(246, 245, 243, 0.95) 35px,
+          rgba(246, 245, 243, 0.84) 61px,
+          rgba(246, 245, 243, 0.66) 90px,
+          rgba(246, 245, 243, 0.45) 119px,
+          rgba(246, 245, 243, 0.26) 144px,
+          rgba(246, 245, 243, 0.12) 166px,
+          rgba(246, 245, 243, 0.04) 182px,
+          rgba(246, 245, 243, 0)    200px),
         linear-gradient(to bottom,
           rgba(246, 245, 243, 0.94) 0,
           rgba(246, 245, 243, 0.90) 62px,
@@ -227,7 +228,7 @@
       color: var(--text);
       letter-spacing: -0.03em;
       line-height: 1.06;
-      margin-bottom: 24px;
+      margin-bottom: 12px;
     }
 
     .hero-sub {
@@ -933,7 +934,7 @@
       }
       .hero-sub { margin-bottom: 0; }
       .hero-est { margin-bottom: 28px; }
-      .hero-title { margin-bottom: 28px; }
+      .hero-title { margin-bottom: 16px; }
       /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
       .hero-scroll { bottom: 30px; }
       .hero-scroll span { color: rgba(0, 0, 0, 0.5); }
@@ -1005,7 +1006,7 @@
       }
       .hero-sub { margin-bottom: 0; }
       .hero-est { margin-bottom: 28px; }
-      .hero-title { margin-bottom: 28px; }
+      .hero-title { margin-bottom: 16px; }
       /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
       .hero-scroll { bottom: 30px; }
       .hero-scroll span { color: rgba(0, 0, 0, 0.5); }
