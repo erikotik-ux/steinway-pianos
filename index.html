@@ -63,16 +63,27 @@
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       padding: 0 56px;
-      background: transparent;
-      border-bottom: 1px solid transparent;
-      transition: background 0.3s ease, border-color 0.3s ease;
+      /* Frosted bar rather than a scrim on the hero: a semi-transparent wash of
+         the page colour plus a blur, so the photography still reads underneath
+         but the links stay legible over it. The bar ends on a hard edge -- the
+         hairline below is at 5% and is there to define that edge, not to draw a
+         border. */
+      background: rgba(246, 245, 243, 0.62);
+      -webkit-backdrop-filter: blur(14px) saturate(115%);
+      backdrop-filter: blur(14px) saturate(115%);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: background 0.3s ease, border-color 0.3s ease,
+                  backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
     }
 
     /* Once past the hero the nav needs its own ground again */
+    /* Past the hero the bar firms up: more of the page colour, a deeper blur.
+       Still short of opaque so it keeps the same material. */
     nav.scrolled {
-      background: rgba(246, 245, 243, 0.94);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--gray-mid);
+      background: rgba(246, 245, 243, 0.86);
+      -webkit-backdrop-filter: blur(20px) saturate(115%);
+      backdrop-filter: blur(20px) saturate(115%);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
     }
 
     .nav-left {
@@ -201,46 +212,29 @@
        needed there — and one would paint straight over the raised lid. The
        portrait crops still want it; see the responsive blocks. */
     /* The pianist fills the whole left edge of this frame, so the nav's dark
-       links would otherwise sit on black cloth and disappear. A scrim across
-       the very top lifts that band back to the page colour and falls away to
-       nothing well before the headline, leaving the photograph itself
-       untouched between them. The matching one at the foot does the same for
-       the scroll cue, whose backdrop swings from near-black to near-white
-       depending on viewport width, so neither dark nor light type would read
-       reliably against the picture alone. It reaches a full 1 at the very
-       bottom rather than stopping short: anything less leaves the hero's last
-       row a little darker than the section beneath it, which reads as a line
-       across the join. The many stops are there to ease the ramp so the
-       dissolve itself does not band, and the two ends share one curve at 150px
-       so they read as a matched pair. 150px also keeps the ramp clear of the
-       hands, which start 190px above the bottom edge. */
+       /* Only the foot is dissolved now. The top scrim was there to keep the
+       nav's dark links off the pianist's black jacket; the nav carries its own
+       frosted bar for that instead, so the photography at the top is left
+       alone. This ramp reaches a full 1 at the very bottom rather than
+       stopping short: anything less leaves the hero's last row a little darker
+       than the section beneath it, which reads as a line across the join. The
+       many stops ease it so the dissolve does not band, and 150px keeps it
+       clear of the hands, which start 190px above the bottom edge. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(to top,
-          rgba(246, 245, 243, 1)    0,
-          rgba(246, 245, 243, 1)    11px,
-          rgba(246, 245, 243, 0.95) 26px,
-          rgba(246, 245, 243, 0.84) 46px,
-          rgba(246, 245, 243, 0.66) 68px,
-          rgba(246, 245, 243, 0.45) 89px,
-          rgba(246, 245, 243, 0.26) 108px,
-          rgba(246, 245, 243, 0.12) 125px,
-          rgba(246, 245, 243, 0.04) 137px,
-          rgba(246, 245, 243, 0)    150px),
-        linear-gradient(to bottom,
-          rgba(246, 245, 243, 1)    0,
-          rgba(246, 245, 243, 1)    11px,
-          rgba(246, 245, 243, 0.95) 26px,
-          rgba(246, 245, 243, 0.84) 46px,
-          rgba(246, 245, 243, 0.66) 68px,
-          rgba(246, 245, 243, 0.45) 89px,
-          rgba(246, 245, 243, 0.26) 108px,
-          rgba(246, 245, 243, 0.12) 125px,
-          rgba(246, 245, 243, 0.04) 137px,
-          rgba(246, 245, 243, 0)    150px);
+      background: linear-gradient(to top,
+        rgba(246, 245, 243, 1)    0,
+        rgba(246, 245, 243, 1)    11px,
+        rgba(246, 245, 243, 0.95) 26px,
+        rgba(246, 245, 243, 0.84) 46px,
+        rgba(246, 245, 243, 0.66) 68px,
+        rgba(246, 245, 243, 0.45) 89px,
+        rgba(246, 245, 243, 0.26) 108px,
+        rgba(246, 245, 243, 0.12) 125px,
+        rgba(246, 245, 243, 0.04) 137px,
+        rgba(246, 245, 243, 0)    150px);
       pointer-events: none;
     }
 
