@@ -160,8 +160,9 @@
        bottom rather than stopping short: anything less leaves the hero's last
        row a little darker than the section beneath it, which reads as a line
        across the join. The many stops are there to ease the ramp so the
-       dissolve itself does not band. It stops at 200px because the hands sit
-       190px and higher above the bottom edge, and a longer ramp washed them. */
+       dissolve itself does not band, and the two ends share one curve at 150px
+       so they read as a matched pair. 150px also keeps the ramp clear of the
+       hands, which start 190px above the bottom edge. */
     #hero::before {
       content: '';
       position: absolute;
@@ -169,20 +170,26 @@
       background:
         linear-gradient(to top,
           rgba(246, 245, 243, 1)    0,
-          rgba(246, 245, 243, 1)    14px,
-          rgba(246, 245, 243, 0.95) 35px,
-          rgba(246, 245, 243, 0.84) 61px,
-          rgba(246, 245, 243, 0.66) 90px,
-          rgba(246, 245, 243, 0.45) 119px,
-          rgba(246, 245, 243, 0.26) 144px,
-          rgba(246, 245, 243, 0.12) 166px,
-          rgba(246, 245, 243, 0.04) 182px,
-          rgba(246, 245, 243, 0)    200px),
+          rgba(246, 245, 243, 1)    11px,
+          rgba(246, 245, 243, 0.95) 26px,
+          rgba(246, 245, 243, 0.84) 46px,
+          rgba(246, 245, 243, 0.66) 68px,
+          rgba(246, 245, 243, 0.45) 89px,
+          rgba(246, 245, 243, 0.26) 108px,
+          rgba(246, 245, 243, 0.12) 125px,
+          rgba(246, 245, 243, 0.04) 137px,
+          rgba(246, 245, 243, 0)    150px),
         linear-gradient(to bottom,
-          rgba(246, 245, 243, 0.94) 0,
-          rgba(246, 245, 243, 0.90) 62px,
-          rgba(246, 245, 243, 0.45) 110px,
-          rgba(246, 245, 243, 0) 168px);
+          rgba(246, 245, 243, 1)    0,
+          rgba(246, 245, 243, 1)    11px,
+          rgba(246, 245, 243, 0.95) 26px,
+          rgba(246, 245, 243, 0.84) 46px,
+          rgba(246, 245, 243, 0.66) 68px,
+          rgba(246, 245, 243, 0.45) 89px,
+          rgba(246, 245, 243, 0.26) 108px,
+          rgba(246, 245, 243, 0.12) 125px,
+          rgba(246, 245, 243, 0.04) 137px,
+          rgba(246, 245, 243, 0)    150px);
       pointer-events: none;
     }
 
@@ -893,17 +900,6 @@
          and wrapped the headline onto three lines. Letting 16vw govern below
          ~400px keeps roughly 20px of margin at every phone width. */
       .hero-title { font-size: clamp(50px, 16vw, 100px); line-height: 1.05; }
-      /* Portrait art puts the keyboard in the bottom third, and the centred
-         block ran into it. Anchor the text above that instead, and drop the
-         sub's 64px tail so the group does not float clear of the keys. */
-      .hero-inner {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 42%;
-        transform: none;
-      }
-      .hero-sub { margin-bottom: 0; }
       /* Sections */
       #models { padding: 80px 40px; }
       .models-header { margin-bottom: 48px; }
@@ -918,6 +914,17 @@
       .reveal-label { left: 32px; bottom: 36px; }
       #hero::before {
         background:
+          linear-gradient(to top,
+            rgba(246, 245, 243, 1)    0,
+            rgba(246, 245, 243, 1)    11px,
+            rgba(246, 245, 243, 0.95) 26px,
+            rgba(246, 245, 243, 0.84) 46px,
+            rgba(246, 245, 243, 0.66) 68px,
+            rgba(246, 245, 243, 0.45) 89px,
+            rgba(246, 245, 243, 0.26) 108px,
+            rgba(246, 245, 243, 0.12) 125px,
+            rgba(246, 245, 243, 0.04) 137px,
+            rgba(246, 245, 243, 0)    150px),
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
       }
@@ -990,6 +997,17 @@
 
       #hero::before {
         background:
+          linear-gradient(to top,
+            rgba(246, 245, 243, 1)    0,
+            rgba(246, 245, 243, 1)    11px,
+            rgba(246, 245, 243, 0.95) 26px,
+            rgba(246, 245, 243, 0.84) 46px,
+            rgba(246, 245, 243, 0.66) 68px,
+            rgba(246, 245, 243, 0.45) 89px,
+            rgba(246, 245, 243, 0.26) 108px,
+            rgba(246, 245, 243, 0.12) 125px,
+            rgba(246, 245, 243, 0.04) 137px,
+            rgba(246, 245, 243, 0)    150px),
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
       }
@@ -1001,7 +1019,9 @@
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 42%;
+        /* 16px above the portrait anchor; calc keeps that a true 16px at every
+           phone height rather than drifting with the percentage. */
+        bottom: calc(42% + 16px);
         transform: none;
       }
       .hero-sub { margin-bottom: 0; }
