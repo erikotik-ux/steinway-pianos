@@ -181,8 +181,8 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 58.8%;
-      transform: translateX(-8vh);
+      bottom: 52.3%;
+      transform: translateX(-3.1vh);
       z-index: 1;
       display: flex;
       flex-direction: column;
@@ -206,7 +206,7 @@
     }
 
     .hero-title {
-      font-size: clamp(46px, 9.55vh, 110px);
+      font-size: clamp(38px, 7.33vh, 86px);
       font-weight: 700;
       color: var(--text);
       letter-spacing: -0.03em;
@@ -215,7 +215,11 @@
     }
 
     .hero-sub {
-      font-size: 13px;
+      /* 11px, not the 3px a literal -10 would leave: at 13px the request would
+         have taken this below legibility. Narrowing it also buys the block room
+         to sit closer to centre, since this line is the widest fixed element
+         and it was what collided with the piano case. */
+      font-size: 11px;
       font-weight: 300;
       letter-spacing: 0.24em;
       text-transform: uppercase;
