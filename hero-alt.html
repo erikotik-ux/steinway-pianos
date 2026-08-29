@@ -132,18 +132,11 @@
     #hero {
       height: 100svh;
       padding-top: 80px;
-      /* ALTERNATE DIRECTION -- editorial split.
-         Two alpha cutouts frame the page from the left and the right; neither
-         carries any background with it, so the centre is not an image at all.
-         It is this rule's own #f6f5f3, the same value the piano-video section
-         uses, which is why there is no rectangle, gradient, seam or colour to
-         match. The left fragment sits clear of the bottom so its keyboard lines
-         up with the pianist's, and both are sized in vh so the whole
-         arrangement holds at any viewport. */
-      background:
-        url('images/backgorund-images/hero-alt-pianist.webp') right -1.1vh bottom 0     / auto 60vh no-repeat,
-        url('images/backgorund-images/hero-alt-piano.webp')   left  -6.7vh bottom 19.6vh / auto 40vh no-repeat,
-        #f6f5f3;
+      /* ALTERNATE DIRECTION -- a single editorial frame, used exactly as it
+         came out of generation: one photograph, full bleed, nothing cut out,
+         masked, recoloured or composited. The headline sits in the clean wedge
+         the picture already leaves between the pianist and the instrument. */
+      background: url('images/backgorund-images/hero-alt-scene.jpg') center / cover no-repeat, #f6f5f3;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -171,13 +164,16 @@
     /* The type is the focal point here, so it simply centres in the hero and
        the photography is sized to leave it room, rather than being pinned to
        a feature of a single plate. */
+    /* The clean area is a wedge, widest along the top and closing in as the
+       pianist's arm rises, so the type is anchored high and left of centre
+       rather than sitting in the middle of the viewport. Percentages and vh
+       keep it locked to the photograph as the hero scales. */
     .hero-inner {
-      position: relative;
-      /* Centred on the clean gap between the two elements, not on the viewport:
-         the piano reaches further in from the left than the pianist does from
-         the right, so viewport-centred type would sit off to the right of the
-         negative space it is meant to occupy. */
-      transform: translateX(-4.4vh);
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 61%;
+      transform: translateX(-13.9vh);
       z-index: 1;
       display: flex;
       flex-direction: column;
