@@ -6,6 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Steinway &amp; Sons</title>
   <meta name="description" content="Steinway &amp; Sons — handcrafted grand pianos built to the highest standard since 1853. Explore our six concert and salon grand models.">
+  <link rel="icon" href="S&amp;S_logo/steinway-and-sons.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Steinway &amp; Sons">
+  <meta property="og:description" content="Handcrafted grand pianos built to the highest standard since 1853. Explore our six concert and salon grand models.">
+  <meta property="og:image" content="images/backgorund-images/hero-alt-scene.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -128,6 +134,51 @@
       background: #8a0000;
     }
 
+    /* Keyboard focus was invisible anywhere on the page. Scoped to
+       :focus-visible so it appears for keyboard users without ringing every
+       mouse click. */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--red);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -60px;
+      z-index: 2000;
+      padding: 10px 18px;
+      background: #f6f5f3;
+      color: var(--text);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      transition: top 0.18s ease;
+    }
+
+    .skip-link:focus { top: 16px; }
+
+    /* Honour a reduced-motion preference. The scripted entrances are skipped
+       separately; this covers the CSS transitions and the scroll behaviour. */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
     /* ── HERO (static — no video) ─────────────────────── */
     #hero {
       height: 100svh;
@@ -137,7 +188,7 @@
          composited. The headline sits in the clean middle the picture already
          leaves between the pianist and the instrument. The previous open-lid
          hero and its build script are kept in the repo, and in history. */
-      background: url('images/backgorund-images/hero-alt-scene.jpg') center / cover no-repeat, #f6f5f3;
+      background: url('images/backgorund-images/hero-alt-scene.webp') center / cover no-repeat, #f6f5f3;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -536,7 +587,7 @@
     /* ── FEATURES ─────────────────────────────────────── */
     #features {
       padding: 120px 56px;
-      background: linear-gradient(rgba(245, 244, 242, 0.82), rgba(245, 244, 242, 0.82)), url('images/backgorund-images/crafting.png') center / cover no-repeat;
+      background: linear-gradient(rgba(245, 244, 242, 0.82), rgba(245, 244, 242, 0.82)), url('images/backgorund-images/crafting.webp') center / cover no-repeat;
       border-top: 1px solid var(--gray-mid);
       border-bottom: 1px solid var(--gray-mid);
     }
@@ -552,9 +603,10 @@
       gap: 56px;
     }
 
+    /* Rests visible; the entrance is applied by a `from` tween at runtime, so
+       the section is still readable if that never runs. */
     .feature-item {
-      opacity: 0;
-      transform: translateY(40px);
+      opacity: 1;
     }
 
     .feature-number {
@@ -590,7 +642,7 @@
 
     /* ── CONTACT + FOOTER WRAP ────────────────────────── */
     .contact-footer-wrap {
-      background: url('images/backgorund-images/stage.png') center / cover no-repeat;
+      background: url('images/backgorund-images/stage.webp') center / cover no-repeat;
     }
 
     /* ── CONTACT ──────────────────────────────────────── */
@@ -880,7 +932,6 @@
     .modal-submit:hover { background: var(--red); }
 
     /* ── Responsive ─────────────────────────────────────── */
-    }
 
     @media (min-width: 769px) and (max-width: 1024px) {
       /* Nav — hamburger replaces full links */
@@ -1062,7 +1113,6 @@
       /* Features */
       #features { padding: 80px 24px; }
       .features-grid { grid-template-columns: 1fr; gap: 48px; }
-      .feature-item { opacity: 1; transform: none; }
 
       /* Contact */
       #contact { padding: 100px 24px; }
@@ -1101,10 +1151,32 @@
       .features-grid { grid-template-columns: 1fr; }
     }
 
+    /* Short viewports -- landscape phones, small laptop windows, a browser with
+       many toolbars. Above the portrait breakpoint the headline is sized from
+       the viewport WIDTH, so on a wide-but-short screen it stayed large while
+       the hero shrank and the block pushed up under the fixed nav. Anchoring
+       from the top and sizing from height keeps it clear. Last in the file so
+       it wins over both the desktop and tablet rules. */
+    @media (min-width: 769px) and (max-height: 600px) {
+      .hero-inner {
+        top: 96px;
+        bottom: auto;
+      }
+
+      .hero-est { margin-bottom: 10px; }
+
+      .hero-title {
+        font-size: clamp(30px, 9vh, 52px);
+        line-height: 1.06;
+        margin-bottom: 10px;
+      }
+    }
+
   </style>
 </head>
 
 <body>
+  <a class="skip-link" href="#models">Skip to content</a>
 
   <!-- NAV -->
   <nav>
@@ -1121,7 +1193,7 @@
       <li><a href="find-a-dealer.html">Find a Dealer</a></li>
       <li><button class="nav-cta" id="nav-cta-btn">Request Information</button></li>
     </ul>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-nav">
       <span></span><span></span><span></span>
     </button>
   </nav>
@@ -1176,7 +1248,7 @@
 
       <div class="model-card">
         <div class="model-card-inner"
-          style="background-image: url('images/models/model-d-high-res.png'); background-size: auto 104%; background-position: 52% 300%;">
+          style="background-image: url('images/models/model-d-high-res.webp'); background-size: auto 104%; background-position: 52% 300%;">
         </div>
         <div class="model-card-bar"></div>
         <div class="model-card-content">
@@ -1189,7 +1261,7 @@
 
       <div class="model-card">
         <div class="model-card-inner"
-          style="background-image: url('images/models/model-b-high-res.png'); background-size: auto 106%; background-position: 55% 200%;">
+          style="background-image: url('images/models/model-b-high-res.webp'); background-size: auto 106%; background-position: 55% 200%;">
         </div>
         <div class="model-card-bar"></div>
         <div class="model-card-content">
@@ -1202,7 +1274,7 @@
 
       <div class="model-card">
         <div class="model-card-inner"
-          style="background-image: url('images/models/model-a-high-res.png'); background-size: auto 114%; background-position: 46% 112%;">
+          style="background-image: url('images/models/model-a-high-res.webp'); background-size: auto 114%; background-position: 46% 112%;">
         </div>
         <div class="model-card-bar"></div>
         <div class="model-card-content">
@@ -1215,7 +1287,7 @@
 
       <div class="model-card">
         <div class="model-card-inner"
-          style="background-image: url('images/models/model-o-high-res.png'); background-size: auto 138%; background-position: 51% 104%;">
+          style="background-image: url('images/models/model-o-high-res.webp'); background-size: auto 138%; background-position: 51% 104%;">
         </div>
         <div class="model-card-bar"></div>
         <div class="model-card-content">
@@ -1228,7 +1300,7 @@
 
       <div class="model-card">
         <div class="model-card-inner"
-          style="background-image: url('images/models/model-m-high-res.png'); background-size: auto 150%; background-position: 56% 93%;">
+          style="background-image: url('images/models/model-m-high-res.webp'); background-size: auto 150%; background-position: 56% 93%;">
         </div>
         <div class="model-card-bar"></div>
         <div class="model-card-content">
@@ -1241,7 +1313,7 @@
 
       <div class="model-card">
         <div class="model-card-inner"
-          style="background-image: url('images/models/model-s-high-res.png'); background-size: auto 130%; background-position: 50% 120%;">
+          style="background-image: url('images/models/model-s-high-res.webp'); background-size: auto 130%; background-position: 50% 120%;">
         </div>
         <div class="model-card-bar"></div>
         <div class="model-card-content">
@@ -1288,7 +1360,7 @@
     </div>
   </section>
 
-  <!-- CONTACT + FOOTER share stage.png background -->
+  <!-- CONTACT + FOOTER share the stage.webp background -->
   <div class="contact-footer-wrap">
 
   <!-- CONTACT -->
@@ -1324,10 +1396,10 @@
       <p class="modal-eyebrow">Get in Touch</p>
       <h2 class="modal-title" id="modal-title">Request Information</h2>
       <form class="modal-form" id="modal-form" novalidate>
-        <input type="text" name="name" placeholder="Full Name" required autocomplete="name">
-        <input type="email" name="email" placeholder="Email Address" required autocomplete="email">
-        <input type="tel" name="phone" placeholder="Phone Number (optional)" autocomplete="tel">
-        <textarea name="message" placeholder="Tell us about your interest — model, occasion, or any questions." autocomplete="off"></textarea>
+        <input type="text" name="name" placeholder="Full Name" aria-label="Full name" required autocomplete="name">
+        <input type="email" name="email" placeholder="Email Address" aria-label="Email address" required autocomplete="email">
+        <input type="tel" name="phone" placeholder="Phone Number (optional)" aria-label="Phone number (optional)" autocomplete="tel">
+        <textarea name="message" placeholder="Tell us about your interest — model, occasion, or any questions." aria-label="Your message" autocomplete="off"></textarea>
         <button type="submit" class="modal-submit">Send Request</button>
       </form>
     </div>
@@ -1337,7 +1409,19 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
-    gsap.registerPlugin(ScrollTrigger);
+    /* GSAP and ScrollTrigger come from a CDN, so they can fail: a blocked host,
+       an ad-blocker, an outage. Previously registerPlugin ran unguarded at the
+       top of this script, so any such failure threw here and every listener
+       below -- modal, mobile nav, nav ground, video -- was never bound. The
+       page kept its content but lost all interactivity. Animation is a
+       progressive enhancement now: if either library is missing the page still
+       works, just without motion. */
+    const HAS_GSAP = typeof gsap !== 'undefined';
+    const HAS_ST = HAS_GSAP && typeof ScrollTrigger !== 'undefined';
+    const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ANIMATE = HAS_GSAP && !REDUCED;
+
+    if (HAS_ST) gsap.registerPlugin(ScrollTrigger);
 
     const video = document.getElementById('piano-video');
     const overlay = document.getElementById('piano-overlay');
@@ -1427,15 +1511,25 @@
       ScrollTrigger.refresh();
     }
 
+    /* The small-screen path is plain rAF and needs no ScrollTrigger; only the
+       desktop scrub does. Without ScrollTrigger the video simply plays itself
+       rather than scrubbing, which is the graceful degradation. */
     if (window.innerWidth <= 1024) {
       initPianoScrollTrigger();
+    } else if (!HAS_ST) {
+      /* #piano-overlay is an opaque bone panel that only the scrub fades out,
+         so without ScrollTrigger it would sit over the video forever. Clear it
+         and let the video simply loop. */
+      overlay.style.opacity = '0';
+      video.loop = true;
+      video.play().catch(() => {});
     } else if (video.readyState >= 1) {
       initPianoScrollTrigger();
     } else {
       video.addEventListener('loadedmetadata', initPianoScrollTrigger, { once: true });
     }
 
-    if (window.innerWidth > 768) {
+    if (HAS_ST && window.innerWidth > 768) {
       window.addEventListener('resize', () => ScrollTrigger.refresh());
       window.addEventListener('load', () => ScrollTrigger.refresh());
     }
@@ -1456,12 +1550,14 @@
     function closeMobileNav() {
       hamburger.classList.remove('open');
       mobileNav.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
     }
 
     hamburger.addEventListener('click', () => {
       const isOpen = mobileNav.classList.toggle('open');
       hamburger.classList.toggle('open', isOpen);
+      hamburger.setAttribute('aria-expanded', String(isOpen));
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 
@@ -1545,45 +1641,59 @@
       }, 2200);
     });
 
-    // ── Hero text entrance ────────────────────────────────────
-    gsap.from('.hero-inner > *, .hero-scroll', {
-      opacity: 0,
-      y: 32,
-      stagger: 0.12,
-      duration: 1.1,
-      ease: 'power3.out',
-      delay: 0.2,
-    });
+    /* Entrance animations. All three are `from` tweens, so the resting state in
+       the markup is the visible one and a missing library or a reduced-motion
+       preference simply leaves the content on screen. The feature items used to
+       be a `to` tween against opacity:0 in CSS, which meant the whole Features
+       section stayed invisible whenever GSAP did not load. */
+    if (ANIMATE) {
+      // ── Hero text entrance ──────────────────────────────────
+      gsap.from('.hero-inner > *, .hero-scroll', {
+        opacity: 0,
+        y: 32,
+        stagger: 0.12,
+        duration: 1.1,
+        ease: 'power3.out',
+        delay: 0.2,
+      });
 
-    // ── Model cards entrance ──────────────────────────────────
-    gsap.from('.model-card', {
-      opacity: 0,
-      y: 56,
-      stagger: 0.08,
-      duration: 0.9,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.models-grid',
-        start: 'top 82%',
-        once: true,
-        invalidateOnRefresh: true,
-      }
-    });
+      if (HAS_ST) {
+        // ── Model cards entrance ──────────────────────────────
+        gsap.from('.model-card', {
+          opacity: 0,
+          y: 56,
+          stagger: 0.08,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.models-grid',
+            start: 'top 82%',
+            once: true,
+            invalidateOnRefresh: true,
+          }
+        });
 
-    // ── Feature items entrance ────────────────────────────────
-    gsap.to('.feature-item', {
-      opacity: 1,
-      y: 0,
-      stagger: 0.15,
-      duration: 1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.features-grid',
-        start: 'top 78%',
-        once: true,
-        invalidateOnRefresh: true,
+        /* Kept to screens above the portrait breakpoint, where this animation
+           has always run: the small-screen rules used to force these visible,
+           so mobile has never seen it and this preserves that. */
+        if (window.matchMedia('(min-width: 769px)').matches) {
+          // ── Feature items entrance ──────────────────────────
+          gsap.from('.feature-item', {
+            opacity: 0,
+            y: 40,
+            stagger: 0.15,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: '.features-grid',
+              start: 'top 78%',
+              once: true,
+              invalidateOnRefresh: true,
+            }
+          });
+        }
       }
-    });
+    }
   </script>
 </body>
 
