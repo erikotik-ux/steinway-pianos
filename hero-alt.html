@@ -152,16 +152,25 @@
        links would otherwise sit on black cloth and disappear. A scrim across
        the very top lifts that band back to the page colour and falls away to
        nothing well before the headline, leaving the photograph itself
-       untouched below it. */
+       untouched between them. The matching one at the foot does the same for
+       the scroll cue, whose backdrop swings from near-black to near-white
+       depending on viewport width, so neither dark nor light type would read
+       reliably against the picture alone. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom,
-        rgba(246, 245, 243, 0.94) 0,
-        rgba(246, 245, 243, 0.90) 62px,
-        rgba(246, 245, 243, 0.45) 110px,
-        rgba(246, 245, 243, 0) 168px);
+      background:
+        linear-gradient(to top,
+          rgba(246, 245, 243, 0.95) 0,
+          rgba(246, 245, 243, 0.80) 56px,
+          rgba(246, 245, 243, 0.30) 104px,
+          rgba(246, 245, 243, 0) 160px),
+        linear-gradient(to bottom,
+          rgba(246, 245, 243, 0.94) 0,
+          rgba(246, 245, 243, 0.90) 62px,
+          rgba(246, 245, 243, 0.45) 110px,
+          rgba(246, 245, 243, 0) 168px);
       pointer-events: none;
     }
 
@@ -180,7 +189,7 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 52.3%;
+      bottom: 51.2%;
       transform: none;
       z-index: 1;
       display: flex;
@@ -205,14 +214,12 @@
     }
 
     .hero-title {
-      font-size: clamp(52px, 10.67vh, 128px);
+      font-size: clamp(48px, 9.78vh, 118px);
       font-weight: 700;
       color: var(--text);
       letter-spacing: -0.03em;
-      line-height: 0.92;
-      margin-bottom: 34px;   /* line-height 0.92 leaves the box shorter than the
-                                glyphs, so at this size the descenders of
-                                "& Sons" crowd the sub-headline */
+      line-height: 1.06;   /* 93px at 88px: 5px more than the 88px it rendered before */
+      margin-bottom: 24px;
     }
 
     .hero-sub {
@@ -872,7 +879,22 @@
         background-position: center bottom;
         padding-bottom: 0;
       }
-      .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
+      /* Floor lowered from 64px: "Made to be" is 356px at 64px against
+         "Steinway"'s 297px, so the old floor pushed it past a 320px viewport
+         and wrapped the headline onto three lines. Letting 16vw govern below
+         ~400px keeps roughly 20px of margin at every phone width. */
+      .hero-title { font-size: clamp(50px, 16vw, 100px); line-height: 1.05; }
+      /* Portrait art puts the keyboard in the bottom third, and the centred
+         block ran into it. Anchor the text above that instead, and drop the
+         sub's 64px tail so the group does not float clear of the keys. */
+      .hero-inner {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 42%;
+        transform: none;
+      }
+      .hero-sub { margin-bottom: 0; }
       /* Sections */
       #models { padding: 80px 40px; }
       .models-header { margin-bottom: 48px; }
@@ -890,9 +912,18 @@
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
       }
-      .hero-sub { margin-bottom: 64px; }
       .scroll-line { height: 48px; }
-      .hero-inner { position: static; transform: none; }
+      /* Portrait art puts the keyboard in the bottom third, and the centred
+         block ran into it. Anchor the text above that instead, and drop the
+         sub's 64px tail so the group does not float clear of the keys. */
+      .hero-inner {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 42%;
+        transform: none;
+      }
+      .hero-sub { margin-bottom: 0; }
       .hero-est { margin-bottom: 28px; }
       .hero-title { margin-bottom: 28px; }
       /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
@@ -940,7 +971,11 @@
         padding-bottom: 0;
       }
 
-      .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
+      /* Floor lowered from 64px: "Made to be" is 356px at 64px against
+         "Steinway"'s 297px, so the old floor pushed it past a 320px viewport
+         and wrapped the headline onto three lines. Letting 16vw govern below
+         ~400px keeps roughly 20px of margin at every phone width. */
+      .hero-title { font-size: clamp(50px, 16vw, 100px); line-height: 1.05; }
       .hero-sub { font-size: 13px; }
       .hero-est { font-size: 10px; }
 
@@ -949,9 +984,18 @@
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
       }
-      .hero-sub { margin-bottom: 64px; }
       .scroll-line { height: 48px; }
-      .hero-inner { position: static; transform: none; }
+      /* Portrait art puts the keyboard in the bottom third, and the centred
+         block ran into it. Anchor the text above that instead, and drop the
+         sub's 64px tail so the group does not float clear of the keys. */
+      .hero-inner {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 42%;
+        transform: none;
+      }
+      .hero-sub { margin-bottom: 0; }
       .hero-est { margin-bottom: 28px; }
       .hero-title { margin-bottom: 28px; }
       /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
@@ -1019,7 +1063,11 @@
     }
 
     @media (max-width: 480px) {
-      .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
+      /* Floor lowered from 64px: "Made to be" is 356px at 64px against
+         "Steinway"'s 297px, so the old floor pushed it past a 320px viewport
+         and wrapped the headline onto three lines. Letting 16vw govern below
+         ~400px keeps roughly 20px of margin at every phone width. */
+      .hero-title { font-size: clamp(50px, 16vw, 100px); line-height: 1.05; }
       .models-grid { grid-template-columns: 1fr; }
       .features-grid { grid-template-columns: 1fr; }
     }
