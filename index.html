@@ -132,9 +132,12 @@
     #hero {
       height: 100svh;
       padding-top: 80px;
-      /* Full-bleed photographic layer: `cover` keeps it edge to edge at every
-         viewport, letting the oversized piano crop through the sides. */
-      background: url('images/backgorund-images/hero-piano.jpg') center / cover no-repeat, #f6f5f3;
+      /* A single editorial frame, used exactly as it came out of generation:
+         one photograph, full bleed, nothing cut out, masked, recoloured or
+         composited. The headline sits in the clean middle the picture already
+         leaves between the pianist and the instrument. The previous open-lid
+         hero and its build script are kept in the repo, and in history. */
+      background: url('images/backgorund-images/hero-alt-scene.jpg') center / cover no-repeat, #f6f5f3;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -146,11 +149,39 @@
     /* The desktop plate already carries an exact #f6f5f3 backdrop, so no wash is
        needed there — and one would paint straight over the raised lid. The
        portrait crops still want it; see the responsive blocks. */
+    /* The pianist fills the whole left edge of this frame, so the nav's dark
+       links would otherwise sit on black cloth and disappear. A scrim across
+       the very top lifts that band back to the page colour and falls away to
+       nothing well before the headline, leaving the photograph itself
+       untouched between them. The matching one at the foot does the same for
+       the scroll cue, whose backdrop swings from near-black to near-white
+       depending on viewport width, so neither dark nor light type would read
+       reliably against the picture alone. It reaches a full 1 at the very
+       bottom rather than stopping short: anything less leaves the hero's last
+       row a little darker than the section beneath it, which reads as a line
+       across the join. The many stops are there to ease the ramp so the
+       dissolve itself does not band. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: none;
+      background:
+        linear-gradient(to top,
+          rgba(246, 245, 243, 1)    0,
+          rgba(246, 245, 243, 1)    18px,
+          rgba(246, 245, 243, 0.95) 46px,
+          rgba(246, 245, 243, 0.84) 80px,
+          rgba(246, 245, 243, 0.66) 118px,
+          rgba(246, 245, 243, 0.45) 156px,
+          rgba(246, 245, 243, 0.26) 190px,
+          rgba(246, 245, 243, 0.12) 218px,
+          rgba(246, 245, 243, 0.04) 240px,
+          rgba(246, 245, 243, 0)    264px),
+        linear-gradient(to bottom,
+          rgba(246, 245, 243, 0.94) 0,
+          rgba(246, 245, 243, 0.90) 62px,
+          rgba(246, 245, 243, 0.45) 110px,
+          rgba(246, 245, 243, 0) 168px);
       pointer-events: none;
     }
 
@@ -159,12 +190,15 @@
        background sizing makes the plate scale exactly with the hero, so pinning
        the headline by percentage keeps it locked to the lid at every viewport
        instead of drifting against it. */
+    /* This frame keeps its whole middle clear, so the type sits on true
+       viewport centre. Percentages and vh keep it locked to the photograph as
+       the hero scales. */
     .hero-inner {
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 60.5%;
-      transform: translateX(16.7vh);
+      bottom: 51.2%;
+      transform: none;
       z-index: 1;
       display: flex;
       flex-direction: column;
@@ -188,16 +222,20 @@
     }
 
     .hero-title {
-      font-size: clamp(44px, calc(9vh - 13px), 92px);
+      font-size: clamp(48px, 9.78vh, 118px);
       font-weight: 700;
       color: var(--text);
       letter-spacing: -0.03em;
-      line-height: 0.92;
-      margin-bottom: 18px;
+      line-height: 1.06;
+      margin-bottom: 24px;
     }
 
     .hero-sub {
-      font-size: 13px;
+      /* 11px, not the 3px a literal -10 would leave: at 13px the request would
+         have taken this below legibility. Narrowing it also buys the block room
+         to sit closer to centre, since this line is the widest fixed element
+         and it was what collided with the piano case. */
+      font-size: 11px;
       font-weight: 300;
       letter-spacing: 0.24em;
       text-transform: uppercase;
@@ -849,7 +887,22 @@
         background-position: center bottom;
         padding-bottom: 0;
       }
-      .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
+      /* Floor lowered from 64px: "Made to be" is 356px at 64px against
+         "Steinway"'s 297px, so the old floor pushed it past a 320px viewport
+         and wrapped the headline onto three lines. Letting 16vw govern below
+         ~400px keeps roughly 20px of margin at every phone width. */
+      .hero-title { font-size: clamp(50px, 16vw, 100px); line-height: 1.05; }
+      /* Portrait art puts the keyboard in the bottom third, and the centred
+         block ran into it. Anchor the text above that instead, and drop the
+         sub's 64px tail so the group does not float clear of the keys. */
+      .hero-inner {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 42%;
+        transform: none;
+      }
+      .hero-sub { margin-bottom: 0; }
       /* Sections */
       #models { padding: 80px 40px; }
       .models-header { margin-bottom: 48px; }
@@ -867,9 +920,18 @@
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
       }
-      .hero-sub { margin-bottom: 64px; }
       .scroll-line { height: 48px; }
-      .hero-inner { position: static; transform: none; }
+      /* Portrait art puts the keyboard in the bottom third, and the centred
+         block ran into it. Anchor the text above that instead, and drop the
+         sub's 64px tail so the group does not float clear of the keys. */
+      .hero-inner {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 42%;
+        transform: none;
+      }
+      .hero-sub { margin-bottom: 0; }
       .hero-est { margin-bottom: 28px; }
       .hero-title { margin-bottom: 28px; }
       /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
@@ -917,7 +979,11 @@
         padding-bottom: 0;
       }
 
-      .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
+      /* Floor lowered from 64px: "Made to be" is 356px at 64px against
+         "Steinway"'s 297px, so the old floor pushed it past a 320px viewport
+         and wrapped the headline onto three lines. Letting 16vw govern below
+         ~400px keeps roughly 20px of margin at every phone width. */
+      .hero-title { font-size: clamp(50px, 16vw, 100px); line-height: 1.05; }
       .hero-sub { font-size: 13px; }
       .hero-est { font-size: 10px; }
 
@@ -926,9 +992,18 @@
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
       }
-      .hero-sub { margin-bottom: 64px; }
       .scroll-line { height: 48px; }
-      .hero-inner { position: static; transform: none; }
+      /* Portrait art puts the keyboard in the bottom third, and the centred
+         block ran into it. Anchor the text above that instead, and drop the
+         sub's 64px tail so the group does not float clear of the keys. */
+      .hero-inner {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 42%;
+        transform: none;
+      }
+      .hero-sub { margin-bottom: 0; }
       .hero-est { margin-bottom: 28px; }
       .hero-title { margin-bottom: 28px; }
       /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
@@ -996,7 +1071,11 @@
     }
 
     @media (max-width: 480px) {
-      .hero-title { font-size: clamp(64px, 16vw, 100px); line-height: 1.05; }
+      /* Floor lowered from 64px: "Made to be" is 356px at 64px against
+         "Steinway"'s 297px, so the old floor pushed it past a 320px viewport
+         and wrapped the headline onto three lines. Letting 16vw govern below
+         ~400px keeps roughly 20px of margin at every phone width. */
+      .hero-title { font-size: clamp(50px, 16vw, 100px); line-height: 1.05; }
       .models-grid { grid-template-columns: 1fr; }
       .features-grid { grid-template-columns: 1fr; }
     }
@@ -1038,7 +1117,7 @@
   <section id="hero">
     <div class="hero-inner">
       <span class="hero-est">Est. 1853 · New York</span>
-      <h1 class="hero-title">Steinway<br>&amp; Sons</h1>
+      <h1 class="hero-title">Made to be<br>Heard</h1>
       <p class="hero-sub">The Instrument of the Immortals</p>
     </div>
     <div class="hero-scroll">
