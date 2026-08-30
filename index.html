@@ -216,31 +216,42 @@
        dark links off the pianist's black jacket; the nav carries its own
        frosted bar for that now, so the photograph runs clean to the top edge.
 
-       This ramp is measured in percentages, so it stays the bottom tenth of the
-       hero at any viewport height rather than covering more of a short one. The
-       curve is weighted hard to the bottom: still barely there at 7% up, past
-       half only in the last 4%. That keeps the keyboard and the hands crisp --
-       the key detail starts 21% up and the hands 21% up too, so neither is
-       touched at all -- and dissolves only the case and lap along the very
-       bottom edge. It reaches a full 1 at the edge itself, because anything
-       less leaves the last row darker than the section below and that reads as
-       a line across the join. */
+       EXPERIMENT: the dissolve is no longer one flat horizontal ramp. A base
+       linear guarantees the seam -- it alone reaches a full 1 at the bottom
+       edge across the whole width, which is what keeps the join invisible --
+       and a row of soft ellipses anchored to that edge lifts it unevenly. All
+       the layers are the same bone, so they combine as 1-(1-a1)(1-a2)... and
+       the result is one continuous field rather than stacked shapes.
+
+       They are placed against the picture: taller on the left where the jacket
+       is, so it dissolves around 6% up, and shallow under the keyboard on the
+       right, which stays crisp to under 3%. The line wanders between those,
+       changing direction five times across the width instead of running
+       straight. Everything is off by 16% up, so the keys and the hands -- which
+       start at 21% -- are untouched. All in percentages, so it holds its
+       proportion at any viewport height. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top,
-        rgba(246, 245, 243, 1)    0,
-        rgba(246, 245, 243, 1)    0.6%,
-        rgba(246, 245, 243, 0.94) 1.5%,
-        rgba(246, 245, 243, 0.82) 2.5%,
-        rgba(246, 245, 243, 0.66) 3.5%,
-        rgba(246, 245, 243, 0.50) 4.5%,
-        rgba(246, 245, 243, 0.35) 5.5%,
-        rgba(246, 245, 243, 0.22) 6.5%,
-        rgba(246, 245, 243, 0.12) 7.5%,
-        rgba(246, 245, 243, 0.05) 8.5%,
-        rgba(246, 245, 243, 0)    10%);
+      background:
+        radial-gradient(ellipse 20% 14.5% at 4% 100%, rgba(246, 245, 243, 0.8) 0%, rgba(246, 245, 243, 0.48) 45%, rgba(246, 245, 243, 0.176) 72%, rgba(246, 245, 243, 0) 100%),
+        radial-gradient(ellipse 16% 9.5% at 14% 100%, rgba(246, 245, 243, 0.5) 0%, rgba(246, 245, 243, 0.3) 45%, rgba(246, 245, 243, 0.11) 72%, rgba(246, 245, 243, 0) 100%),
+        radial-gradient(ellipse 17% 12.5% at 24% 100%, rgba(246, 245, 243, 0.66) 0%, rgba(246, 245, 243, 0.396) 45%, rgba(246, 245, 243, 0.145) 72%, rgba(246, 245, 243, 0) 100%),
+        radial-gradient(ellipse 14% 7% at 35% 100%, rgba(246, 245, 243, 0.42) 0%, rgba(246, 245, 243, 0.252) 45%, rgba(246, 245, 243, 0.092) 72%, rgba(246, 245, 243, 0) 100%),
+        radial-gradient(ellipse 16% 10.5% at 45% 100%, rgba(246, 245, 243, 0.58) 0%, rgba(246, 245, 243, 0.348) 45%, rgba(246, 245, 243, 0.128) 72%, rgba(246, 245, 243, 0) 100%),
+        radial-gradient(ellipse 15% 5.6% at 57% 100%, rgba(246, 245, 243, 0.3) 0%, rgba(246, 245, 243, 0.18) 45%, rgba(246, 245, 243, 0.066) 72%, rgba(246, 245, 243, 0) 100%),
+        radial-gradient(ellipse 16% 8.6% at 68% 100%, rgba(246, 245, 243, 0.48) 0%, rgba(246, 245, 243, 0.288) 45%, rgba(246, 245, 243, 0.106) 72%, rgba(246, 245, 243, 0) 100%),
+        radial-gradient(ellipse 14% 4.8% at 79% 100%, rgba(246, 245, 243, 0.26) 0%, rgba(246, 245, 243, 0.156) 45%, rgba(246, 245, 243, 0.057) 72%, rgba(246, 245, 243, 0) 100%),
+        radial-gradient(ellipse 15% 7.4% at 88% 100%, rgba(246, 245, 243, 0.44) 0%, rgba(246, 245, 243, 0.264) 45%, rgba(246, 245, 243, 0.097) 72%, rgba(246, 245, 243, 0) 100%),
+        radial-gradient(ellipse 14% 5.2% at 97% 100%, rgba(246, 245, 243, 0.32) 0%, rgba(246, 245, 243, 0.192) 45%, rgba(246, 245, 243, 0.07) 72%, rgba(246, 245, 243, 0) 100%),
+        linear-gradient(to top,
+          rgba(246, 245, 243, 1) 0%,
+          rgba(246, 245, 243, 1) 0.5%,
+          rgba(246, 245, 243, 0.52) 1.8%,
+          rgba(246, 245, 243, 0.18) 3.4%,
+          rgba(246, 245, 243, 0.05) 5%,
+          rgba(246, 245, 243, 0) 6.5%);
       pointer-events: none;
     }
 
