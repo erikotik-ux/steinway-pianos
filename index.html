@@ -199,7 +199,9 @@
          composited. The headline sits in the clean middle the picture already
          leaves between the pianist and the instrument. The previous open-lid
          hero and its build script are kept in the repo, and in history. */
-      background: url('images/backgorund-images/hero-alt-scene.webp') center / cover no-repeat, #f6f5f3;
+      /* The picture itself now lives on ::before so a real mask can carve its
+         foot; the hero keeps only the ground it dissolves into. */
+      background: #f6f5f3;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -234,24 +236,27 @@
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(ellipse 20% 14.5% at 4% 100%, rgba(246, 245, 243, 0.8) 0%, rgba(246, 245, 243, 0.48) 45%, rgba(246, 245, 243, 0.176) 72%, rgba(246, 245, 243, 0) 100%),
-        radial-gradient(ellipse 16% 9.5% at 14% 100%, rgba(246, 245, 243, 0.5) 0%, rgba(246, 245, 243, 0.3) 45%, rgba(246, 245, 243, 0.11) 72%, rgba(246, 245, 243, 0) 100%),
-        radial-gradient(ellipse 17% 12.5% at 24% 100%, rgba(246, 245, 243, 0.66) 0%, rgba(246, 245, 243, 0.396) 45%, rgba(246, 245, 243, 0.145) 72%, rgba(246, 245, 243, 0) 100%),
-        radial-gradient(ellipse 14% 7% at 35% 100%, rgba(246, 245, 243, 0.42) 0%, rgba(246, 245, 243, 0.252) 45%, rgba(246, 245, 243, 0.092) 72%, rgba(246, 245, 243, 0) 100%),
-        radial-gradient(ellipse 16% 10.5% at 45% 100%, rgba(246, 245, 243, 0.58) 0%, rgba(246, 245, 243, 0.348) 45%, rgba(246, 245, 243, 0.128) 72%, rgba(246, 245, 243, 0) 100%),
-        radial-gradient(ellipse 15% 5.6% at 57% 100%, rgba(246, 245, 243, 0.3) 0%, rgba(246, 245, 243, 0.18) 45%, rgba(246, 245, 243, 0.066) 72%, rgba(246, 245, 243, 0) 100%),
-        radial-gradient(ellipse 16% 8.6% at 68% 100%, rgba(246, 245, 243, 0.48) 0%, rgba(246, 245, 243, 0.288) 45%, rgba(246, 245, 243, 0.106) 72%, rgba(246, 245, 243, 0) 100%),
-        radial-gradient(ellipse 14% 4.8% at 79% 100%, rgba(246, 245, 243, 0.26) 0%, rgba(246, 245, 243, 0.156) 45%, rgba(246, 245, 243, 0.057) 72%, rgba(246, 245, 243, 0) 100%),
-        radial-gradient(ellipse 15% 7.4% at 88% 100%, rgba(246, 245, 243, 0.44) 0%, rgba(246, 245, 243, 0.264) 45%, rgba(246, 245, 243, 0.097) 72%, rgba(246, 245, 243, 0) 100%),
-        radial-gradient(ellipse 14% 5.2% at 97% 100%, rgba(246, 245, 243, 0.32) 0%, rgba(246, 245, 243, 0.192) 45%, rgba(246, 245, 243, 0.07) 72%, rgba(246, 245, 243, 0) 100%),
-        linear-gradient(to top,
-          rgba(246, 245, 243, 1) 0%,
-          rgba(246, 245, 243, 1) 0.5%,
-          rgba(246, 245, 243, 0.52) 1.8%,
-          rgba(246, 245, 243, 0.18) 3.4%,
-          rgba(246, 245, 243, 0.05) 5%,
-          rgba(246, 245, 243, 0) 6.5%);
+      background: url('images/backgorund-images/hero-alt-scene.webp') center / cover no-repeat;
+      /* The foot is carved out of the photograph rather than painted over.
+         A wash can only add opacity, so it can never let the picture survive
+         LOWER in one column than another; a mask can, and that is the whole
+         point of the effect. The PNG's alpha is the hero box 1:1 -- opaque
+         above ~7%, then a narrow ramp on a line that wanders between roughly
+         2% and 7% so the bottom edge is not level, and below it a handful of
+         thin verticals that run on a little further and taper out. They are an
+         abstract nod to the strings inside the case, not a drawing of one:
+         fourteen of them, weighted to the piano side and sparse over the
+         pianist. Everything is inside the bottom 12.5% and the last rows are
+         forced to zero, so the seam lands on exact #f6f5f3 and the hands and
+         keys -- which start at 21% up -- are never touched. */
+      -webkit-mask-image: url('images/backgorund-images/hero-string-mask.png');
+      mask-image: url('images/backgorund-images/hero-string-mask.png');
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
       pointer-events: none;
     }
 
@@ -975,6 +980,7 @@
       #piano-video { top: 72px; bottom: auto; height: 56.25vw; object-fit: contain; transform: none; }
       .reveal-label { left: 32px; bottom: 36px; }
       #hero::before {
+        /* portrait keeps the flat wash over its own crop */
         background:
           linear-gradient(to top,
             rgba(246, 245, 243, 1)    0,
@@ -989,6 +995,8 @@
             rgba(246, 245, 243, 0)    150px),
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
+        -webkit-mask-image: none;
+        mask-image: none;
       }
       .scroll-line { height: 48px; }
       /* Portrait art puts the keyboard in the bottom third, and the centred
@@ -1058,6 +1066,7 @@
       .hero-est { font-size: 10px; }
 
       #hero::before {
+        /* portrait keeps the flat wash over its own crop */
         background:
           linear-gradient(to top,
             rgba(246, 245, 243, 1)    0,
@@ -1072,6 +1081,8 @@
             rgba(246, 245, 243, 0)    150px),
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
+        -webkit-mask-image: none;
+        mask-image: none;
       }
       .scroll-line { height: 48px; }
       /* Portrait art puts the keyboard in the bottom third, and the centred
