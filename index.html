@@ -192,16 +192,21 @@
 
     /* ── HERO (static — no video) ─────────────────────── */
     #hero {
-      height: 100svh;
+      /* The hero art is the previous plate with 476 native px of soundwave
+         attached underneath it (5376x3024 -> 5376x3500). Under `cover` the
+         scale is driven by height at every aspect at or below 16:9, so growing
+         the hero by exactly that 476px in image scale -- 476/3024 of a viewport
+         -- lands the plate at the same size, the same horizontal crop and the
+         same top alignment as before. The original composition does not move;
+         the frame simply continues further down to reveal the dissolve.
+
+         The dissolve is in the artwork now, so nothing is masked or washed over
+         it. The open-lid hero, the mask build scripts and the plain fade are
+         all kept in the repo and in history. */
+      --hero-extra: calc(100svh * 476 / 3024);
+      height: calc(100svh + var(--hero-extra));
       padding-top: 80px;
-      /* A single editorial frame, used exactly as it came out of generation:
-         one photograph, full bleed, nothing cut out, masked, recoloured or
-         composited. The headline sits in the clean middle the picture already
-         leaves between the pianist and the instrument. The previous open-lid
-         hero and its build script are kept in the repo, and in history. */
-      /* The picture itself now lives on ::before so a real mask can carve its
-         foot; the hero keeps only the ground it dissolves into. */
-      background: #f6f5f3;
+      background: url('images/backgorund-images/hero-wave-scene.webp') center / cover no-repeat, #f6f5f3;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -210,95 +215,15 @@
       overflow: hidden;
     }
 
-    /* The desktop plate already carries an exact #f6f5f3 backdrop, so no wash is
-       needed there — and one would paint straight over the raised lid. The
-       portrait crops still want it; see the responsive blocks. */
-    /* The pianist fills the whole left edge of this frame, so the nav's dark
-       /* Only the foot is dissolved. The top scrim was there to keep the nav's
-       dark links off the pianist's black jacket; the nav carries its own
-       frosted bar for that now, so the photograph runs clean to the top edge.
-
-       EXPERIMENT: the dissolve is no longer one flat horizontal ramp. A base
-       linear guarantees the seam -- it alone reaches a full 1 at the bottom
-       edge across the whole width, which is what keeps the join invisible --
-       and a row of soft ellipses anchored to that edge lifts it unevenly. All
-       the layers are the same bone, so they combine as 1-(1-a1)(1-a2)... and
-       the result is one continuous field rather than stacked shapes.
-
-       They are placed against the picture: taller on the left where the jacket
-       is, so it dissolves around 6% up, and shallow under the keyboard on the
-       right, which stays crisp to under 3%. The line wanders between those,
-       changing direction five times across the width instead of running
-       straight. Everything is off by 16% up, so the keys and the hands -- which
-       start at 21% -- are untouched. All in percentages, so it holds its
-       proportion at any viewport height. */
+    /* Kept only as the scaffold the portrait blocks hang their own wash
+       on. On desktop it draws nothing: the dissolve is in the artwork. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: url('images/backgorund-images/hero-alt-scene.webp') center / cover no-repeat;
-      /* The foot is carved out of the photograph, not painted over it. A wash
-         can only add opacity, so it can never let the picture survive lower in
-         one column than the next -- which is the whole of this effect. The
-         picture breaks into a fine soundwave and the soundwave is what
-         disappears.
-
-         The mask is the photograph's own 16:9, sized `cover` exactly as the
-         picture is, so the two crop identically and the waveform stays welded
-         to the subjects at every width instead of sliding across them.
-
-         Its density is read out of the photograph rather than invented: the
-         columns are weighted by how much ink the picture actually carries just
-         above the break, so the fragments grow out of the pianist's jacket on
-         the left and the piano case on the right, and the bright middle -- which
-         is already near page bone -- stays clean. Hair-thin lines on a jittered
-         ~3.4px pitch, heights roughened by a low-frequency envelope so it reads
-         as loud and quiet passages rather than an even comb, each tapering out
-         as it descends, with a few faint stragglers running on further so the
-         wave thins into the page instead of stopping on a line.
-
-         The photograph is a flat 1.000 at 17% up and above, so the hands and
-         the keyboard (which start at 21%) are untouched, and the last rows are
-         forced to zero so the seam lands on exact #f6f5f3.
-
-         Revert paths, in order of how far back they go:
-           git show main:index.html            -- the plain horizontal fade
-           images/backgorund-images/hero-string-mask.png  -- the sparse-strings pass
-         Rebuild this asset with scripts/build_wave_mask.py. */
-      -webkit-mask-image: url('images/backgorund-images/hero-wave-mask.png');
-      mask-image: url('images/backgorund-images/hero-wave-mask.png');
-      -webkit-mask-size: cover;
-      mask-size: cover;
-      -webkit-mask-repeat: no-repeat;
-      mask-repeat: no-repeat;
-      -webkit-mask-position: center;
-      mask-position: center;
       pointer-events: none;
     }
 
-    /* `cover` crops the mask the same way it crops the picture, which is what
-       keeps the two locked -- but on a viewport wider than 16:9 that crop takes
-       the bottom off both, and the wave gets cut mid-fragment. Only then is a
-       backstop needed, so it is scoped to exactly that case: at 16:9 and
-       narrower the full mask height lands on the hero and nothing here paints,
-       which is what keeps the faintest fragments from being washed out on an
-       ordinary screen. */
-    @media (min-width: 769px) and (min-aspect-ratio: 16 / 9) {
-      #hero::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 8%;
-        background: linear-gradient(to top,
-          #f6f5f3 0%,
-          rgba(246, 245, 243, 0.72) 26%,
-          rgba(246, 245, 243, 0.26) 58%,
-          rgba(246, 245, 243, 0) 100%);
-        pointer-events: none;
-      }
-    }
 
     /* On a real grand the body fills the space between lid and keyboard, so the
        headline sits in the open backdrop above the instrument. Height-driven
@@ -312,7 +237,11 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 51.2%;
+      /* Was 51.2% of the hero. The hero is now taller, but only at the bottom,
+         so a percentage would drag the type down with it. Measuring up from the
+         original plate's bottom edge instead keeps it exactly where it was:
+         51.2% of the old hero == 51.2svh, because that hero was 100svh tall. */
+      bottom: calc(51.2svh + var(--hero-extra));
       transform: none;
       z-index: 1;
       display: flex;
@@ -997,6 +926,8 @@
       .hamburger { display: flex; }
       /* Hero — use portrait image and match mobile title proportions */
       #hero {
+        /* portrait has its own plate, so it keeps the plain viewport height */
+        --hero-extra: 0px;
         background-image: url('images/backgorund-images/hero-keys-mobile.jpg');
         background-size: cover;
         background-position: center bottom;
@@ -1035,8 +966,6 @@
             rgba(246, 245, 243, 0)    150px),
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
-        -webkit-mask-image: none;
-        mask-image: none;
       }
 
       .scroll-line { height: 48px; }
@@ -1090,6 +1019,8 @@
 
       /* Hero */
       #hero {
+        /* portrait has its own plate, so it keeps the plain viewport height */
+        --hero-extra: 0px;
         padding-top: 64px;
         height: 100svh;
         background-image: url('images/backgorund-images/hero-keys-mobile.jpg');
@@ -1122,8 +1053,6 @@
             rgba(246, 245, 243, 0)    150px),
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
-        -webkit-mask-image: none;
-        mask-image: none;
       }
 
       .scroll-line { height: 48px; }
