@@ -237,27 +237,67 @@
       position: absolute;
       inset: 0;
       background: url('images/backgorund-images/hero-alt-scene.webp') center / cover no-repeat;
-      /* The foot is carved out of the photograph rather than painted over.
-         A wash can only add opacity, so it can never let the picture survive
-         LOWER in one column than another; a mask can, and that is the whole
-         point of the effect. The PNG's alpha is the hero box 1:1 -- opaque
-         above ~7%, then a narrow ramp on a line that wanders between roughly
-         2% and 7% so the bottom edge is not level, and below it a handful of
-         thin verticals that run on a little further and taper out. They are an
-         abstract nod to the strings inside the case, not a drawing of one:
-         fourteen of them, weighted to the piano side and sparse over the
-         pianist. Everything is inside the bottom 12.5% and the last rows are
-         forced to zero, so the seam lands on exact #f6f5f3 and the hands and
-         keys -- which start at 21% up -- are never touched. */
-      -webkit-mask-image: url('images/backgorund-images/hero-string-mask.png');
-      mask-image: url('images/backgorund-images/hero-string-mask.png');
-      -webkit-mask-size: 100% 100%;
-      mask-size: 100% 100%;
+      /* The foot is carved out of the photograph, not painted over it. A wash
+         can only add opacity, so it can never let the picture survive lower in
+         one column than the next -- which is the whole of this effect. The
+         picture breaks into a fine soundwave and the soundwave is what
+         disappears.
+
+         The mask is the photograph's own 16:9, sized `cover` exactly as the
+         picture is, so the two crop identically and the waveform stays welded
+         to the subjects at every width instead of sliding across them.
+
+         Its density is read out of the photograph rather than invented: the
+         columns are weighted by how much ink the picture actually carries just
+         above the break, so the fragments grow out of the pianist's jacket on
+         the left and the piano case on the right, and the bright middle -- which
+         is already near page bone -- stays clean. Hair-thin lines on a jittered
+         ~3.4px pitch, heights roughened by a low-frequency envelope so it reads
+         as loud and quiet passages rather than an even comb, each tapering out
+         as it descends, with a few faint stragglers running on further so the
+         wave thins into the page instead of stopping on a line.
+
+         The photograph is a flat 1.000 at 17% up and above, so the hands and
+         the keyboard (which start at 21%) are untouched, and the last rows are
+         forced to zero so the seam lands on exact #f6f5f3.
+
+         Revert paths, in order of how far back they go:
+           git show main:index.html            -- the plain horizontal fade
+           images/backgorund-images/hero-string-mask.png  -- the sparse-strings pass
+         Rebuild this asset with scripts/build_wave_mask.py. */
+      -webkit-mask-image: url('images/backgorund-images/hero-wave-mask.png');
+      mask-image: url('images/backgorund-images/hero-wave-mask.png');
+      -webkit-mask-size: cover;
+      mask-size: cover;
       -webkit-mask-repeat: no-repeat;
       mask-repeat: no-repeat;
       -webkit-mask-position: center;
       mask-position: center;
       pointer-events: none;
+    }
+
+    /* `cover` crops the mask the same way it crops the picture, which is what
+       keeps the two locked -- but on a viewport wider than 16:9 that crop takes
+       the bottom off both, and the wave gets cut mid-fragment. Only then is a
+       backstop needed, so it is scoped to exactly that case: at 16:9 and
+       narrower the full mask height lands on the hero and nothing here paints,
+       which is what keeps the faintest fragments from being washed out on an
+       ordinary screen. */
+    @media (min-width: 769px) and (min-aspect-ratio: 16 / 9) {
+      #hero::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 8%;
+        background: linear-gradient(to top,
+          #f6f5f3 0%,
+          rgba(246, 245, 243, 0.72) 26%,
+          rgba(246, 245, 243, 0.26) 58%,
+          rgba(246, 245, 243, 0) 100%);
+        pointer-events: none;
+      }
     }
 
     /* On a real grand the body fills the space between lid and keyboard, so the
@@ -998,6 +1038,7 @@
         -webkit-mask-image: none;
         mask-image: none;
       }
+
       .scroll-line { height: 48px; }
       /* Portrait art puts the keyboard in the bottom third, and the centred
          block ran into it. Anchor the text above that instead, and drop the
@@ -1084,6 +1125,7 @@
         -webkit-mask-image: none;
         mask-image: none;
       }
+
       .scroll-line { height: 48px; }
       /* Portrait art puts the keyboard in the bottom third, and the centred
          block ran into it. Anchor the text above that instead, and drop the
