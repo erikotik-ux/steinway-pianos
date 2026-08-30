@@ -192,14 +192,35 @@
 
     /* ── HERO (static — no video) ─────────────────────── */
     #hero {
-      height: 100svh;
+      /* The hero art is the previous plate with 476 native px of soundwave
+         attached underneath it (5376x3024 -> 5376x3500).
+
+         The whole job here is to leave the photograph exactly where main puts
+         it and simply carry on further down. At 16:9 and narrower `cover` is
+         height-driven, so the plate lands at main's scale with no vertical
+         crop, and the hero only has to grow by that 476px measured in image
+         scale -- 476/3024 of a viewport, which is what 3500/3024 amounts to.
+         Wider than 16:9 the crop is real and the media query below handles it.
+
+         --hero-extra is whatever height the hero gained over a plain viewport;
+         the type is offset by it so it does not drift. Portrait pins --hero-h
+         to 100svh, which zeroes the offset and the growth together.
+
+         The dissolve is in the artwork now, so nothing is masked or washed over
+         it. The CSS-mask experiments that led here -- the string mask, the
+         soundwave mask and the scripts that generated them -- are in history
+         only; `git log` on this file finds them. */
+      --hero-h: calc(100svh * 3500 / 3024);
+      --hero-extra: calc(var(--hero-h) - 100svh);
+      height: var(--hero-h);
       padding-top: 80px;
-      /* A single editorial frame, used exactly as it came out of generation:
-         one photograph, full bleed, nothing cut out, masked, recoloured or
-         composited. The headline sits in the clean middle the picture already
-         leaves between the pianist and the instrument. The previous open-lid
-         hero and its build script are kept in the repo, and in history. */
-      background: url('images/backgorund-images/hero-alt-scene.webp') center / cover no-repeat, #f6f5f3;
+      /* Anchored to the BOTTOM, not the centre. Above 16:9 `cover` has to crop
+         vertically, and centring that crop would both push the composition up
+         off main's framing and shave the end off the soundwave. Anchoring the
+         plate's bottom edge to the hero's bottom edge puts the whole crop on
+         the top, where --hero-h is sized to make it exactly the crop main
+         already takes. Below 16:9 there is no crop and this reads as `center`. */
+      background: url('images/backgorund-images/hero-wave-scene.webp') center bottom / cover no-repeat, #f6f5f3;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -208,41 +229,30 @@
       overflow: hidden;
     }
 
-    /* The desktop plate already carries an exact #f6f5f3 backdrop, so no wash is
-       needed there — and one would paint straight over the raised lid. The
-       portrait crops still want it; see the responsive blocks. */
-    /* The pianist fills the whole left edge of this frame, so the nav's dark
-       /* Only the foot is dissolved. The top scrim was there to keep the nav's
-       dark links off the pianist's black jacket; the nav carries its own
-       frosted bar for that now, so the photograph runs clean to the top edge.
+    /* Wider than the plate's own 16:9 and `cover` becomes width-driven, so it
+       renders the picture taller than the hero and has to crop. main crops
+       (3024k - 100svh)/2 off the top at scale k = 100vw/5376. To land on that
+       same crop with the plate anchored bottom, the hero has to be the whole
+       plate less that amount:
 
-       This ramp is measured in percentages, so it stays the bottom tenth of the
-       hero at any viewport height rather than covering more of a short one. The
-       curve is weighted hard to the bottom: still barely there at 7% up, past
-       half only in the last 4%. That keeps the keyboard and the hands crisp --
-       the key detail starts 21% up and the hands 21% up too, so neither is
-       touched at all -- and dissolves only the case and lap along the very
-       bottom edge. It reaches a full 1 at the edge itself, because anything
-       less leaves the last row darker than the section below and that reads as
-       a line across the join. */
+         H = 3500k - (3024k - 100svh)/2 = 100vw * 1988/5376 + 50svh
+
+       which keeps main's scale and main's top crop at every width, while the
+       soundwave still ends flush with the hero's bottom edge. At exactly 16:9
+       this equals the base height, so the two branches meet without a jump. */
+    @media (min-width: 1025px) and (min-aspect-ratio: 16 / 9) {
+      #hero { --hero-h: calc(100vw * 1988 / 5376 + 50svh); }
+    }
+
+    /* Kept only as the scaffold the portrait blocks hang their own wash
+       on. On desktop it draws nothing: the dissolve is in the artwork. */
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top,
-        rgba(246, 245, 243, 1)    0,
-        rgba(246, 245, 243, 1)    0.6%,
-        rgba(246, 245, 243, 0.94) 1.5%,
-        rgba(246, 245, 243, 0.82) 2.5%,
-        rgba(246, 245, 243, 0.66) 3.5%,
-        rgba(246, 245, 243, 0.50) 4.5%,
-        rgba(246, 245, 243, 0.35) 5.5%,
-        rgba(246, 245, 243, 0.22) 6.5%,
-        rgba(246, 245, 243, 0.12) 7.5%,
-        rgba(246, 245, 243, 0.05) 8.5%,
-        rgba(246, 245, 243, 0)    10%);
       pointer-events: none;
     }
+
 
     /* On a real grand the body fills the space between lid and keyboard, so the
        headline sits in the open backdrop above the instrument. Height-driven
@@ -256,7 +266,11 @@
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 51.2%;
+      /* Was 51.2% of the hero. The hero is now taller, but only at the bottom,
+         so a percentage would drag the type down with it. Measuring up from the
+         original plate's bottom edge instead keeps it exactly where it was:
+         51.2% of the old hero == 51.2svh, because that hero was 100svh tall. */
+      bottom: calc(51.2svh + var(--hero-extra));
       transform: none;
       z-index: 1;
       display: flex;
@@ -302,13 +316,16 @@
       margin-bottom: 0;
     }
 
+    /* Dropped on desktop: the soundwave already carries the eye off the bottom
+       of the frame, and a cue underneath it competes with that. The portrait
+       blocks switch it back on -- see `display: flex` in each. */
     .hero-scroll {
       position: absolute;
       left: 0;
       right: 0;
       bottom: 8px;
       z-index: 2;
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       gap: 10px;
@@ -941,6 +958,8 @@
       .hamburger { display: flex; }
       /* Hero — use portrait image and match mobile title proportions */
       #hero {
+        /* portrait has its own plate, so it keeps the plain viewport height */
+        --hero-h: 100svh;
         background-image: url('images/backgorund-images/hero-keys-mobile.jpg');
         background-size: cover;
         background-position: center bottom;
@@ -964,6 +983,7 @@
       #piano-video { top: 72px; bottom: auto; height: 56.25vw; object-fit: contain; transform: none; }
       .reveal-label { left: 32px; bottom: 36px; }
       #hero::before {
+        /* portrait keeps the flat wash over its own crop */
         background:
           linear-gradient(to top,
             rgba(246, 245, 243, 1)    0,
@@ -979,6 +999,7 @@
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
       }
+
       .scroll-line { height: 48px; }
       /* Portrait art puts the keyboard in the bottom third, and the centred
          block ran into it. Anchor the text above that instead, and drop the
@@ -994,7 +1015,7 @@
       .hero-est { margin-bottom: 28px; }
       .hero-title { margin-bottom: 16px; }
       /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
-      .hero-scroll { bottom: 30px; }
+      .hero-scroll { display: flex; bottom: 30px; }
       .hero-scroll span { color: rgba(0, 0, 0, 0.5); }
       .scroll-line { background: rgba(0, 0, 0, 0.18); }
       .scroll-line::after { background: rgba(0, 0, 0, 0.55); }
@@ -1030,6 +1051,8 @@
 
       /* Hero */
       #hero {
+        /* portrait has its own plate, so it keeps the plain viewport height */
+        --hero-h: 100svh;
         padding-top: 64px;
         height: 100svh;
         background-image: url('images/backgorund-images/hero-keys-mobile.jpg');
@@ -1047,6 +1070,7 @@
       .hero-est { font-size: 10px; }
 
       #hero::before {
+        /* portrait keeps the flat wash over its own crop */
         background:
           linear-gradient(to top,
             rgba(246, 245, 243, 1)    0,
@@ -1062,6 +1086,7 @@
           linear-gradient(to bottom, #f6f5f3 0%, #f6f5f3 22%, rgba(246, 245, 243, 0.7) 38%, rgba(246, 245, 243, 0) 56%),
           radial-gradient(ellipse 70% 55% at 50% 40%, rgba(182, 0, 0, 0.05) 0%, transparent 70%);
       }
+
       .scroll-line { height: 48px; }
       /* Portrait art puts the keyboard in the bottom third, and the centred
          block ran into it. Anchor the text above that instead, and drop the
@@ -1079,7 +1104,7 @@
       .hero-est { margin-bottom: 28px; }
       .hero-title { margin-bottom: 16px; }
       /* Portrait art bottoms out on bright naturals — ink cue, pinned low */
-      .hero-scroll { bottom: 30px; }
+      .hero-scroll { display: flex; bottom: 30px; }
       .hero-scroll span { color: rgba(0, 0, 0, 0.5); }
       .scroll-line { background: rgba(0, 0, 0, 0.18); }
       .scroll-line::after { background: rgba(0, 0, 0, 0.55); }
