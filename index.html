@@ -193,26 +193,54 @@
     /* ── HERO (static — no video) ─────────────────────── */
     #hero {
       /* The hero art is the previous plate with 476 native px of soundwave
-         attached underneath it (5376x3024 -> 5376x3500). Under `cover` the
-         scale is driven by height at every aspect at or below 16:9, so growing
-         the hero by exactly that 476px in image scale -- 476/3024 of a viewport
-         -- lands the plate at the same size, the same horizontal crop and the
-         same top alignment as before. The original composition does not move;
-         the frame simply continues further down to reveal the dissolve.
+         attached underneath it (5376x3024 -> 5376x3500).
+
+         The whole job here is to leave the photograph exactly where main puts
+         it and simply carry on further down. At 16:9 and narrower `cover` is
+         height-driven, so the plate lands at main's scale with no vertical
+         crop, and the hero only has to grow by that 476px measured in image
+         scale -- 476/3024 of a viewport, which is what 3500/3024 amounts to.
+         Wider than 16:9 the crop is real and the media query below handles it.
+
+         --hero-extra is whatever height the hero gained over a plain viewport;
+         the type is offset by it so it does not drift. Portrait pins --hero-h
+         to 100svh, which zeroes the offset and the growth together.
 
          The dissolve is in the artwork now, so nothing is masked or washed over
          it. The open-lid hero, the mask build scripts and the plain fade are
          all kept in the repo and in history. */
-      --hero-extra: calc(100svh * 476 / 3024);
-      height: calc(100svh + var(--hero-extra));
+      --hero-h: calc(100svh * 3500 / 3024);
+      --hero-extra: calc(var(--hero-h) - 100svh);
+      height: var(--hero-h);
       padding-top: 80px;
-      background: url('images/backgorund-images/hero-wave-scene.webp') center / cover no-repeat, #f6f5f3;
+      /* Anchored to the BOTTOM, not the centre. Above 16:9 `cover` has to crop
+         vertically, and centring that crop would both push the composition up
+         off main's framing and shave the end off the soundwave. Anchoring the
+         plate's bottom edge to the hero's bottom edge puts the whole crop on
+         the top, where --hero-h is sized to make it exactly the crop main
+         already takes. Below 16:9 there is no crop and this reads as `center`. */
+      background: url('images/backgorund-images/hero-wave-scene.webp') center bottom / cover no-repeat, #f6f5f3;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
       position: relative;
       overflow: hidden;
+    }
+
+    /* Wider than the plate's own 16:9 and `cover` becomes width-driven, so it
+       renders the picture taller than the hero and has to crop. main crops
+       (3024k - 100svh)/2 off the top at scale k = 100vw/5376. To land on that
+       same crop with the plate anchored bottom, the hero has to be the whole
+       plate less that amount:
+
+         H = 3500k - (3024k - 100svh)/2 = 100vw * 1988/5376 + 50svh
+
+       which keeps main's scale and main's top crop at every width, while the
+       soundwave still ends flush with the hero's bottom edge. At exactly 16:9
+       this equals the base height, so the two branches meet without a jump. */
+    @media (min-width: 1025px) and (min-aspect-ratio: 16 / 9) {
+      #hero { --hero-h: calc(100vw * 1988 / 5376 + 50svh); }
     }
 
     /* Kept only as the scaffold the portrait blocks hang their own wash
@@ -927,7 +955,7 @@
       /* Hero — use portrait image and match mobile title proportions */
       #hero {
         /* portrait has its own plate, so it keeps the plain viewport height */
-        --hero-extra: 0px;
+        --hero-h: 100svh;
         background-image: url('images/backgorund-images/hero-keys-mobile.jpg');
         background-size: cover;
         background-position: center bottom;
@@ -1020,7 +1048,7 @@
       /* Hero */
       #hero {
         /* portrait has its own plate, so it keeps the plain viewport height */
-        --hero-extra: 0px;
+        --hero-h: 100svh;
         padding-top: 64px;
         height: 100svh;
         background-image: url('images/backgorund-images/hero-keys-mobile.jpg');
