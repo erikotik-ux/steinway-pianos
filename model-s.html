@@ -23,8 +23,8 @@
     .hero-size { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 48px; }
     .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
     .hero-image { position: absolute; right: 0; top: 0; bottom: 0; width: 55%; overflow: hidden; }
-    .hero-image img { position: absolute; right: 0; top: 0; height: 100%; width: auto; max-width: none; display: block; }
-    .hero-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 45%); pointer-events: none; }
+    .hero-image img { position: absolute; right: 0; top: 0; height: 100%; width: auto; max-width: none; display: block; transform: translateX(33.89vh); }
+    .hero-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, rgba(246, 245, 243, 0.92) 5%, rgba(246, 245, 243, 0.55) 14%, rgba(246, 245, 243, 0.18) 24%, transparent 34%); pointer-events: none; }
     .divider { height: 1px; background: var(--gray-mid); margin: 0 48px; }
     .model-body { max-width: 1200px; margin: 0 auto; padding: 100px 48px; display: grid; grid-template-columns: 1fr 360px; gap: 80px; align-items: start; }
     .body-text h2 { font-family: 'Libre Baskerville', serif; font-size: clamp(28px, 3.5vw, 44px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 32px; }
