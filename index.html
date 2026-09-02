@@ -495,6 +495,12 @@
     }
 
     .model-card {
+      /* The whole card is the link now, not just "Explore". One real anchor
+         wrapping the card beats an overlay: no nested interactive elements,
+         and the focus ring lands on the card itself. */
+      display: block;
+      text-decoration: none;
+      color: inherit;
       position: relative;
       aspect-ratio: 3 / 4;
       background: #0c0c0c;
@@ -1271,7 +1277,7 @@
     </div>
     <div class="models-grid">
 
-      <div class="model-card">
+      <a class="model-card" href="model-d.html" aria-label="Model D, Concert Grand">
         <div class="model-card-inner"
           style="background-image: url('images/models/model-d-high-res.webp'); background-size: auto 104%; background-position: 52% 300%;">
         </div>
@@ -1280,11 +1286,11 @@
           <div class="model-size">8′ 11¾″</div>
           <div class="model-name">Model D</div>
           <div class="model-tagline">Concert Grand</div>
-          <a href="model-d.html" class="model-link">Explore</a>
+          <span class="model-link">Explore</span>
         </div>
-      </div>
+      </a>
 
-      <div class="model-card">
+      <a class="model-card" href="model-b.html" aria-label="Model B, Classic Grand">
         <div class="model-card-inner"
           style="background-image: url('images/models/model-b-high-res.webp'); background-size: auto 106%; background-position: 55% 200%;">
         </div>
@@ -1293,11 +1299,11 @@
           <div class="model-size">6′ 11″</div>
           <div class="model-name">Model B</div>
           <div class="model-tagline">Classic Grand</div>
-          <a href="model-b.html" class="model-link">Explore</a>
+          <span class="model-link">Explore</span>
         </div>
-      </div>
+      </a>
 
-      <div class="model-card">
+      <a class="model-card" href="model-a.html" aria-label="Model A, Salon Grand">
         <div class="model-card-inner"
           style="background-image: url('images/models/model-a-high-res.webp'); background-size: auto 114%; background-position: 46% 112%;">
         </div>
@@ -1306,11 +1312,11 @@
           <div class="model-size">6′ 2″</div>
           <div class="model-name">Model A</div>
           <div class="model-tagline">Salon Grand</div>
-          <a href="model-a.html" class="model-link">Explore</a>
+          <span class="model-link">Explore</span>
         </div>
-      </div>
+      </a>
 
-      <div class="model-card">
+      <a class="model-card" href="model-o.html" aria-label="Model O, Living Room Grand">
         <div class="model-card-inner"
           style="background-image: url('images/models/model-o-high-res.webp'); background-size: auto 138%; background-position: 51% 104%;">
         </div>
@@ -1319,11 +1325,11 @@
           <div class="model-size">5′ 10¾″</div>
           <div class="model-name">Model O</div>
           <div class="model-tagline">Living Room Grand</div>
-          <a href="model-o.html" class="model-link">Explore</a>
+          <span class="model-link">Explore</span>
         </div>
-      </div>
+      </a>
 
-      <div class="model-card">
+      <a class="model-card" href="model-m.html" aria-label="Model M, Medium Grand">
         <div class="model-card-inner"
           style="background-image: url('images/models/model-m-high-res.webp'); background-size: auto 150%; background-position: 56% 93%;">
         </div>
@@ -1332,11 +1338,11 @@
           <div class="model-size">5′ 7″</div>
           <div class="model-name">Model M</div>
           <div class="model-tagline">Medium Grand</div>
-          <a href="model-m.html" class="model-link">Explore</a>
+          <span class="model-link">Explore</span>
         </div>
-      </div>
+      </a>
 
-      <div class="model-card">
+      <a class="model-card" href="model-s.html" aria-label="Model S, Baby Grand">
         <div class="model-card-inner"
           style="background-image: url('images/models/model-s-high-res.webp'); background-size: auto 130%; background-position: 50% 120%;">
         </div>
@@ -1345,9 +1351,9 @@
           <div class="model-size">5′ 1″</div>
           <div class="model-name">Model S</div>
           <div class="model-tagline">Baby Grand</div>
-          <a href="model-s.html" class="model-link">Explore</a>
+          <span class="model-link">Explore</span>
         </div>
-      </div>
+      </a>
 
     </div>
   </section>
